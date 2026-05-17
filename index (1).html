@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Presensi</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <style>
+    /* ── reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #f5f5f3;
+      --surface:   #ffffff;
+      --surface2:  #f0efeb;
+      --border:    rgba(0,0,0,0.10);
+      --border2:   rgba(0,0,0,0.18);
+      --text:      #1a1a18;
+      --text2:     #5f5e5a;
+      --text3:     #9b9a95;
+      --green:     #1D9E75;
+      --green-bg:  #E1F5EE;
+      --green-txt: #085041;
+      --amber:     #EF9F27;
+      --amber-bg:  #FAEEDA;
+      --amber-txt: #633806;
+      --red:       #E24B4A;
+      --red-bg:    #FCEBEB;
+      --red-txt:   #791F1F;
+      --radius:    10px;
+      --radius-sm: 6px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:        #1c1c1a;
+        --surface:   #252523;
+        --surface2:  #2e2e2b;
+        --border:    rgba(255,255,255,0.10);
+        --border2:   rgba(255,255,255,0.18);
+        --text:      #f0efeb;
+        --text2:     #b4b2a9;
+        --text3:     #6f6e6a;
+        --green-bg:  #085041;
+        --green-txt: #9FE1CB;
+        --amber-bg:  #633806;
+        --amber-txt: #FAC775;
+        --red-bg:    #791F1F;
+        --red-txt:   #F09595;
+      }
+    }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── layout ── */
+    .shell { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .top-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 1.75rem; }
+    .top-bar h1 { font-size: 18px; font-weight: 500; }
+    .filters { display: flex; gap: 8px; }
+    select { font-size: 13px; padding: 6px 10px; border-radius: var(--radius-sm); border: 0.5px solid var(--border2); background: var(--surface); color: var(--text); cursor: pointer; }
+    select:focus { outline: none; border-color: var(--green); }
+
+    /* ── section label ── */
+    .label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; color: var(--text3); text-transform: uppercase; margin-bottom: 10px; }
+
+    /* ── metric grid ── */
+    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+    .metric { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px 16px; }
+    .metric .m-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+    .metric .m-val   { font-size: 22px; font-weight: 500; }
+    .metric .m-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .metric.c-red    .m-val { color: var(--red);   }
+    .metric.c-green  .m-val { color: var(--green); }
+    .metric.c-amber  .m-val { color: var(--amber); }
+
+    /* ── card ── */
+    .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
+
+    /* ── spotlight ── */
+    .spotlight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .sp-card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); padding: 1.25rem; }
+    .sp-card.best { border-top: 3px solid var(--green); }
+    .sp-card.grow { border-top: 3px solid var(--amber); }
+    .sp-tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: var(--radius-sm); display: inline-flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+    .sp-tag.best { background: var(--green-bg); color: var(--green-txt); }
+    .sp-tag.grow { background: var(--amber-bg); color: var(--amber-txt); }
+    .av-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .av { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+    .av-name  { font-size: 15px; font-weight: 500; }
+    .av-score { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .quote { font-size: 13px; color: var(--text2); line-height: 1.65; border-left: 3px solid var(--border2); padding-left: 12px; margin-bottom: 14px; }
+    .quote.best { border-color: var(--green); }
+    .quote.grow { border-color: var(--amber); }
+    .sp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .sp-stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 12px; }
+    .sp-stat .s-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+    .sp-stat .s-val   { font-size: 14px; font-weight: 500; }
+    .bar-wrap { margin-top: 4px; }
+    .bar-head { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 5px; }
+    .bar-track { background: var(--surface2); border-radius: 4px; height: 6px; overflow: hidden; }
+    .bar-fill  { height: 6px; border-radius: 4px; transition: width .4s ease; }
+
+    /* ── rank list ── */
+    .rank-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid var(--border); }
+    .rank-row:last-child { border-bottom: none; }
+    .rank-num  { font-size: 12px; color: var(--text3); width: 18px; text-align: center; flex-shrink: 0; }
+    .sm-av     { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; flex-shrink: 0; }
+    .r-name    { flex: 1; font-size: 13px; }
+    .r-track   { width: 100px; background: var(--surface2); border-radius: 4px; height: 5px; overflow: hidden; flex-shrink: 0; }
+    .r-fill    { height: 5px; border-radius: 4px; }
+    .r-score   { font-size: 12px; font-weight: 500; color: var(--text2); width: 32px; text-align: right; flex-shrink: 0; }
+
+    /* ── table rekap ── */
+    .tbl-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 580px; }
+    th { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; padding: 8px 10px; border-bottom: 0.5px solid var(--border2); text-align: left; white-space: nowrap; }
+    td { padding: 9px 10px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .td-emp { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .badge { font-size: 11px; padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 500; white-space: nowrap; }
+    .badge.pos  { background: var(--green-bg); color: var(--green-txt); }
+    .badge.neg  { background: var(--red-bg);   color: var(--red-txt);   }
+    .badge.zero { background: var(--surface2); color: var(--text2);     }
+
+    /* ── loading / error ── */
+    .state-box { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 14px; }
+    .spinner { width: 24px; height: 24px; border: 2px solid var(--border2); border-top-color: var(--green); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── avatar color palette (6 warna) ── */
+    .av-0 { background: #9FE1CB; color: #085041; }
+    .av-1 { background: #B5D4F4; color: #0C447C; }
+    .av-2 { background: #F4C0D1; color: #72243E; }
+    .av-3 { background: #FAC775; color: #633806; }
+    .av-4 { background: #CCC8FA; color: #3C3489; }
+    .av-5 { background: #F5C4B3; color: #712B13; }
+
+    @media (max-width: 520px) {
+      .spotlight-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="top-bar">
+    <h1>Dashboard Presensi</h1>
+    <div class="filters">
+      <select id="selBulan">
+        <option value="1">Januari</option><option value="2">Februari</option>
+        <option value="3">Maret</option><option value="4">April</option>
+        <option value="5">Mei</option><option value="6">Juni</option>
+        <option value="7">Juli</option><option value="8">Agustus</option>
+        <option value="9">September</option><option value="10">Oktober</option>
+        <option value="11">November</option><option value="12">Desember</option>
+      </select>
+      <select id="selTahun"></select>
+    </div>
+  </div>
+
+  <div id="app"><div class="state-box"><div class="spinner"></div>Memuat data...</div></div>
+
+</div>
+
+<script>
+// ================================================================
+// GANTI URL INI dengan Web App URL dari Apps Script kamu
+// ================================================================
+const API_URL = "https://script.google.com/macros/s/PASTE_URL_KAMU_DISINI/exec";
+
+// ── avatar color index (konsisten per nama) ──
+const avatarMap = {};
+let avatarIdx = 0;
+function getAvatar(nama) {
+  if (avatarMap[nama] === undefined) avatarMap[nama] = avatarIdx++ % 6;
+  return avatarMap[nama];
+}
+function initials(nama) {
+  return nama.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+}
+
+const bulanNames = ['','Januari','Februari','Maret','April','Mei','Juni',
+                    'Juli','Agustus','September','Oktober','November','Desember'];
+const medals = ['#1D9E75','#5DCAA5','#97C459','#EF9F27','#D85A30','#A32D2D'];
+
+function fmtRp(val) {
+  if (!val || val === 0) return 'Rp0';
+  const abs = Math.abs(val);
+  const str = abs >= 1000000
+    ? (abs/1000000).toFixed(1).replace('.0','') + 'jt'
+    : (abs/1000).toFixed(0) + 'rb';
+  return (val < 0 ? '-' : '+') + 'Rp' + str;
+}
+
+// ── inisialisasi filter ──
+function initFilters() {
+  const now  = new Date();
+  const selB = document.getElementById('selBulan');
+  const selY = document.getElementById('selTahun');
+
+  selB.value = now.getMonth() + 1;
+  for (let y = 2024; y <= now.getFullYear() + 1; y++) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y;
+    if (y === now.getFullYear()) o.selected = true;
+    selY.appendChild(o);
+  }
+  selB.addEventListener('change', loadData);
+  selY.addEventListener('change', loadData);
+}
+
+// ── fetch data ──
+async function loadData() {
+  const b = document.getElementById('selBulan').value;
+  const y = document.getElementById('selTahun').value;
+  document.getElementById('app').innerHTML =
+    '<div class="state-box"><div class="spinner"></div>Memuat data...</div>';
+
+  try {
+    const res  = await fetch(`${API_URL}?action=dashboard&bulan=${b}&tahun=${y}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    render(data, parseInt(b), parseInt(y));
+  } catch (err) {
+    document.getElementById('app').innerHTML =
+      `<div class="state-box"><i class="ti ti-wifi-off" style="font-size:24px;display:block;margin-bottom:8px;"></i>
+       Gagal memuat data.<br><small style="color:var(--text3)">${err.message}</small></div>`;
+  }
+}
+
+// ── render semua ──
+function render(data, b, y) {
+  const { summary, scores, rekap } = data;
+  const totalKaryawan = rekap.length;
+
+  // rerata jam masuk dari rekap
+  const jams = rekap.filter(e => e.rerataMasuk && e.rerataMasuk !== '—')
+    .map(e => { const [h,m] = e.rerataMasuk.split(':').map(Number); return h*60+m; });
+  const avgMin = jams.length ? Math.round(jams.reduce((a,b)=>a+b,0)/jams.length) : null;
+  const avgJam = avgMin !== null
+    ? String(Math.floor(avgMin/60)).padStart(2,'0')+':'+String(avgMin%60).padStart(2,'0')
+    : '—';
+
+  document.getElementById('app').innerHTML = `
+    <p class="label">Ringkasan · ${bulanNames[b]} ${y}</p>
+
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="m-label">Total karyawan</div>
+        <div class="m-val">${totalKaryawan}</div>
+        <div class="m-sub">aktif bulan ini</div>
+      </div>
+      <div class="metric c-amber">
+        <div class="m-label">Rerata jam masuk</div>
+        <div class="m-val">${avgJam}</div>
+        <div class="m-sub">rata-rata semua</div>
+      </div>
+      <div class="metric c-red">
+        <div class="m-label">Total denda</div>
+        <div class="m-val">${fmtRp(summary.totalDenda)}</div>
+        <div class="m-sub">${summary.dendaCount} karyawan terdenda</div>
+      </div>
+      <div class="metric c-green">
+        <div class="m-label">Total lembur</div>
+        <div class="m-val">${fmtRp(summary.totalLembur)}</div>
+        <div class="m-sub">${summary.lemburCount} karyawan</div>
+      </div>
+    </div>
+
+    <p class="label">Spotlight karyawan</p>
+    <div class="spotlight-grid" id="spotlight"></div>
+
+    <div class="card">
+      <p class="label">Peringkat semua karyawan</p>
+      <div id="rank-list"></div>
+    </div>
+
+    <div class="card">
+      <p class="label">Rekap karyawan</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Karyawan</th>
+              <th style="text-align:center;">Hadir</th>
+              <th style="text-align:center;">Izin</th>
+              <th style="text-align:center;">Sakit</th>
+              <th style="text-align:right;">Lembur</th>
+              <th style="text-align:right;">Denda</th>
+              <th style="text-align:right;">Net</th>
+            </tr>
+          </thead>
+          <tbody id="tbl-body"></tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  renderSpotlight(scores, rekap);
+  renderRank(scores);
+  renderTable(rekap);
+}
+
+// ── spotlight ──
+const quotesBest = [
+  n => `Konsistensi adalah kekuatan terbesar. ${n} hadir penuh dan selalu tepat waktu — teladan nyata bagi tim.`,
+  n => `${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`,
+];
+const quotesGrow = [
+  n => `Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit penyesuaian, ${n} bisa melompat jauh bulan depan.`,
+  n => `${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`,
+];
+
+function spCard(e, rekap, type, rank, totalHari) {
+  const r    = rekap.find(x => x.nama === e.nama) || {};
+  const idx  = getAvatar(e.nama);
+  const qArr = type === 'best' ? quotesBest : quotesGrow;
+  const q    = qArr[rank % qArr.length](e.nama);
+  const tag  = type === 'best'
+    ? `<span class="sp-tag best"><i class="ti ti-star" style="font-size:12px"></i>Bintang bulan ini</span>`
+    : `<span class="sp-tag grow"><i class="ti ti-trending-up" style="font-size:12px"></i>Ruang untuk tumbuh</span>`;
+  const barColor = type === 'best' ? '#1D9E75' : '#EF9F27';
+
+  return `
+    <div class="sp-card ${type}">
+      ${tag}
+      <div class="av-row">
+        <div class="av av-${idx}">${initials(e.nama)}</div>
+        <div>
+          <div class="av-name">${e.nama}</div>
+          <div class="av-score">Skor ${e.skor} · Peringkat #${rank}</div>
+        </div>
+      </div>
+      <div class="quote ${type}">${q}</div>
+      <div class="sp-stats">
+        <div class="sp-stat"><div class="s-label">Kehadiran</div><div class="s-val">${r.hadir||0} / ${totalHari} hari</div></div>
+        <div class="sp-stat"><div class="s-label">Rerata masuk</div><div class="s-val">${e.rerataMasuk||'—'}</div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-head"><span>Skor keseluruhan</span><span>${e.skor} / 100</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${e.skor}%;background:${barColor};"></div></div>
+      </div>
+    </div>`;
+}
+
+function renderSpotlight(scores, rekap) {
+  if (!scores.length) return;
+  const totalHari = Math.max(...rekap.map(r => r.hariKerja || r.hadir || 1));
+  const best = scores[0];
+  const grow = scores[scores.length - 1];
+  document.getElementById('spotlight').innerHTML =
+    spCard(best, rekap, 'best', 1, totalHari) +
+    spCard(grow, rekap, 'grow', scores.length, totalHari);
+}
+
+// ── rank list ──
+function renderRank(scores) {
+  const el = document.getElementById('rank-list');
+  if (!scores.length) { el.innerHTML = '<div class="state-box" style="padding:1rem;">Tidak ada data.</div>'; return; }
+  el.innerHTML = scores.map((e, i) => `
+    <div class="rank-row">
+      <span class="rank-num">${i+1}</span>
+      <div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div>
+      <span class="r-name">${e.nama}</span>
+      <div class="r-track"><div class="r-fill" style="width:${e.skor}%;background:${medals[i]||'#888'};"></div></div>
+      <span class="r-score">${e.skor}</span>
+    </div>`).join('');
+}
+
+// ── table rekap ──
+function renderTable(rekap) {
+  const tbody = document.getElementById('tbl-body');
+  if (!rekap.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">Tidak ada data.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rekap.map(e => {
+    const net = e.net || 0;
+    const bc  = net > 0 ? 'pos' : net < 0 ? 'neg' : 'zero';
+    return `
+      <tr>
+        <td><div class="td-emp"><div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div>${e.nama}</div></td>
+        <td style="text-align:center;">${e.hadir}</td>
+        <td style="text-align:center;">${e.izin}</td>
+        <td style="text-align:center;">${e.sakit}</td>
+        <td style="text-align:right;color:${(e.totalLembur||0)>0?'#1D9E75':'var(--text3)'};">${fmtRp(e.totalLembur||0)}</td>
+        <td style="text-align:right;color:${(e.totalDenda||0)<0?'#E24B4A':'var(--text3)'};">${fmtRp(e.totalDenda||0)}</td>
+        <td style="text-align:right;"><span class="badge ${bc}">${fmtRp(net)}</span></td>
+      </tr>`;
+  }).join('');
+}
+
+initFilters();
+loadData();
+</script>
+</body>
+</html>

@@ -114,10 +114,17 @@
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
       background: linear-gradient(90deg, var(--purple), var(--purple-lt));
     }
-    .metric .m-icon { font-size: 20px; margin-bottom: 8px; opacity: .35; }
+    .metric.c-red::before    { background: linear-gradient(90deg, var(--red), #ff8ca0); }
+    .metric.c-green::before  { background: linear-gradient(90deg, var(--green), #6de8bb); }
+    .metric.c-amber::before  { background: linear-gradient(90deg, var(--amber), #ffd08a); }
+    .metric .m-icon { font-size: 20px; margin-bottom: 8px; opacity: .45; }
     .metric .m-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
-    .metric .m-val   { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; color: var(--text); }
+    .metric .m-val   { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
     .metric .m-sub   { font-size: 11px; color: var(--text3); margin-top: 3px; }
+    .metric.c-red    .m-val { color: var(--red);    }
+    .metric.c-green  .m-val { color: var(--green);  }
+    .metric.c-amber  .m-val { color: var(--amber);  }
+    .metric          .m-val { color: var(--purple);  }
 
     /* ── card ── */
     .card {
@@ -135,7 +142,7 @@
     }
     .sp-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
     .sp-card.best { border-top: 3px solid var(--purple); }
-    .sp-card.grow { border-top: 3px solid var(--border2); }
+    .sp-card.grow { border-top: 3px solid var(--amber); }
 
     .sp-tag {
       font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
@@ -143,7 +150,7 @@
       letter-spacing: 0.03em;
     }
     .sp-tag.best { background: var(--purple-bg); color: var(--purple-txt); }
-    .sp-tag.grow { background: var(--surface2);  color: var(--text2); }
+    .sp-tag.grow { background: var(--amber-bg);  color: var(--amber-txt);  }
 
     .av-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
     .av {
@@ -161,7 +168,7 @@
       font-style: italic;
     }
     .quote.best { border-color: var(--purple); }
-    .quote.grow { border-color: var(--border2); }
+    .quote.grow { border-color: var(--amber); }
 
     .sp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .sp-stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 9px 12px; }
@@ -216,13 +223,13 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── avatar palette (monokromatik ungu-abu) ── */
+    /* ── avatar palette (ungu-biru-hijau-hangat) ── */
     .av-0 { background: #ddd5ff; color: #3d1fa8; }
-    .av-1 { background: #c9c2f5; color: #3d1fa8; }
-    .av-2 { background: #e8e4ff; color: #4a2fb5; }
-    .av-3 { background: #d4cef8; color: #3d1fa8; }
-    .av-4 { background: #ede9ff; color: #5537cc; }
-    .av-5 { background: #bfb8f0; color: #2e1890; }
+    .av-1 { background: #c7d9ff; color: #1a3d8b; }
+    .av-2 { background: #c4f0e2; color: #0a6648; }
+    .av-3 { background: #fde8c0; color: #7a4a00; }
+    .av-4 { background: #ffd6e0; color: #8b1530; }
+    .av-5 { background: #d9f5b0; color: #2d5a00; }
 
     @media (max-width: 520px) {
       .spotlight-grid { grid-template-columns: 1fr; }
@@ -392,7 +399,7 @@ const quotesBest = [
   n => `${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`,
 ];
 const quotesGrow = [
-  n => `Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit penyesuaian, ${n} bisa melompat jauh bulan depan.`,
+  n => `Dengan sedikit motivasi, ${n} bisa melompat jauh bulan depan.`,
   n => `${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`,
 ];
 
@@ -404,7 +411,9 @@ function spCard(e, rekap, type, rank, totalHari) {
   const tag  = type === 'best'
     ? `<span class="sp-tag best"><i class="ti ti-star" style="font-size:12px"></i>Bintang bulan ini</span>`
     : `<span class="sp-tag grow"><i class="ti ti-trending-up" style="font-size:12px"></i>Ruang untuk tumbuh</span>`;
-  const barColor = 'linear-gradient(90deg,#6d4cff,#a78bff)';
+  const barColor = type === 'best'
+    ? 'linear-gradient(90deg,#6d4cff,#a78bff)'
+    : 'linear-gradient(90deg,#f5a623,#ffd08a)';
 
   return `
     <div class="sp-card ${type}">

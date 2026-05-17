@@ -8,241 +8,150 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:        #f4f3ff;
-      --surface:   #ffffff;
-      --surface2:  #ede9ff;
-      --border:    rgba(109,76,255,0.12);
-      --border2:   rgba(109,76,255,0.22);
-      --text:      #1a1730;
-      --text2:     #5b5580;
-      --text3:     #a09bcc;
-      --purple:    #6d4cff;
-      --purple-lt: #8b6dff;
-      --purple-bg: #ede9ff;
-      --purple-txt:#3d1fa8;
-      --green:     #22c98b;
-      --green-bg:  #e0faf2;
-      --green-txt: #0a6648;
-      --amber:     #f5a623;
-      --amber-bg:  #fff4de;
-      --amber-txt: #7a4a00;
-      --red:       #ff4f6a;
-      --red-bg:    #ffecf0;
-      --red-txt:   #8b1530;
-      --radius:    12px;
-      --radius-sm: 8px;
-      --shadow:    0 2px 12px rgba(109,76,255,0.10);
-      --shadow-md: 0 4px 24px rgba(109,76,255,0.15);
+      --bg:         #f7f6f3;
+      --surface:    #ffffff;
+      --surface2:   #f2f0ec;
+      --border:     rgba(0,0,0,0.07);
+      --border2:    rgba(0,0,0,0.13);
+      --text:       #1c1b19;
+      --text2:      #6b6862;
+      --text3:      #aeaba3;
+      --orange:     #f07040;
+      --orange-lt:  #f5957a;
+      --orange-bg:  #fdf0ec;
+      --orange-txt: #8c3518;
+      --green:      #22c98b;
+      --green-bg:   #e0faf2;
+      --green-txt:  #0a6648;
+      --amber:      #f5a623;
+      --amber-bg:   #fff4de;
+      --amber-txt:  #7a4a00;
+      --red:        #f04f4f;
+      --red-bg:     #fdefef;
+      --red-txt:    #8b1515;
+      --radius:     14px;
+      --radius-sm:  9px;
     }
-
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg:        #100e1f;
-        --surface:   #181630;
-        --surface2:  #221f3a;
-        --border:    rgba(141,115,255,0.14);
-        --border2:   rgba(141,115,255,0.24);
-        --text:      #e8e5ff;
-        --text2:     #9b97c8;
-        --text3:     #5a567a;
-        --purple-bg: #2a2257;
-        --purple-txt:#c4b8ff;
-        --green-bg:  #0a3d2a;
-        --green-txt: #6de8bb;
-        --amber-bg:  #3d2a00;
-        --amber-txt: #ffd08a;
-        --red-bg:    #3d0f1e;
-        --red-txt:   #ff9aae;
-        --shadow:    0 2px 12px rgba(0,0,0,0.35);
-        --shadow-md: 0 4px 24px rgba(0,0,0,0.45);
+        --bg:         #161513;
+        --surface:    #201e1b;
+        --surface2:   #2a2724;
+        --border:     rgba(255,255,255,0.07);
+        --border2:    rgba(255,255,255,0.13);
+        --text:       #f0ede8;
+        --text2:      #9e9a92;
+        --text3:      #5e5b55;
+        --orange-bg:  #3d1e10;
+        --orange-txt: #f5957a;
+        --green-bg:   #0a3d2a;
+        --green-txt:  #6de8bb;
+        --amber-bg:   #3d2a00;
+        --amber-txt:  #ffd08a;
+        --red-bg:     #3d1010;
+        --red-txt:    #ff9a9a;
       }
     }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
 
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 14px;
-      min-height: 100vh;
-    }
-    a { color: inherit; text-decoration: none; }
+    .shell { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
-    /* ── layout ── */
-    .shell { max-width: 940px; margin: 0 auto; padding: 2.25rem 1.5rem 4rem; }
-
-    /* ── top bar ── */
-    .top-bar {
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px; margin-bottom: 2rem;
-    }
-    .top-bar-left { display: flex; align-items: center; gap: 12px; }
-    .logo-dot {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, #6d4cff, #a78bff);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 12px rgba(109,76,255,0.35);
-    }
-    .logo-dot i { color: #fff; font-size: 18px; }
-    .top-bar h1 { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
-    .top-bar h1 span { color: var(--purple); }
-
+    .top-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 38px; height: 38px; border-radius: 11px; background: var(--orange); display: flex; align-items: center; justify-content: center; }
+    .brand-icon i { color: #fff; font-size: 19px; }
+    .brand-name { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+    .brand-name span { color: var(--orange); }
     .filters { display: flex; gap: 8px; }
-    select {
-      font-size: 13px; padding: 7px 12px; border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border2); background: var(--surface);
-      color: var(--text); cursor: pointer; font-weight: 500;
-      box-shadow: var(--shadow); transition: border-color .2s;
-    }
-    select:focus { outline: none; border-color: var(--purple); }
+    select { font-size: 13px; padding: 7px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--surface); color: var(--text); cursor: pointer; font-weight: 500; }
+    select:focus { outline: none; border-color: var(--orange); }
 
-    /* ── section label ── */
-    .label {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.10em;
-      color: var(--text3); text-transform: uppercase; margin-bottom: 12px;
-    }
+    .label { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; color: var(--text3); text-transform: uppercase; margin-bottom: 12px; }
 
-    /* ── metric grid ── */
     .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; margin-bottom: 1.75rem; }
-    .metric {
-      background: var(--surface); border-radius: var(--radius);
-      padding: 16px 18px; box-shadow: var(--shadow);
-      border: 1px solid var(--border); position: relative; overflow: hidden;
-      transition: box-shadow .2s, transform .2s;
-    }
-    .metric:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-    .metric::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--purple), var(--purple-lt));
-    }
-    .metric.c-red::before    { background: linear-gradient(90deg, var(--red), #ff8ca0); }
-    .metric.c-green::before  { background: linear-gradient(90deg, var(--green), #6de8bb); }
-    .metric.c-amber::before  { background: linear-gradient(90deg, var(--amber), #ffd08a); }
-    .metric .m-icon { font-size: 20px; margin-bottom: 8px; opacity: .45; }
-    .metric .m-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
-    .metric .m-val   { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+    .metric { background: var(--surface); border-radius: var(--radius); padding: 16px 18px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+    .metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--orange); }
+    .metric.c-green::after { background: var(--green); }
+    .metric.c-red::after   { background: var(--red); }
+    .metric.c-amber::after { background: var(--amber); }
+    .metric .m-icon { font-size: 22px; margin-bottom: 10px; color: var(--orange); opacity: .55; }
+    .metric.c-green .m-icon { color: var(--green); }
+    .metric.c-red   .m-icon { color: var(--red); }
+    .metric.c-amber .m-icon { color: var(--amber); }
+    .metric .m-label { font-size: 12px; color: var(--text2); margin-bottom: 3px; font-weight: 500; }
+    .metric .m-val   { font-size: 24px; font-weight: 700; color: var(--orange); letter-spacing: -0.5px; }
+    .metric.c-green  .m-val { color: var(--green); }
+    .metric.c-red    .m-val { color: var(--red); }
+    .metric.c-amber  .m-val { color: var(--amber); }
     .metric .m-sub   { font-size: 11px; color: var(--text3); margin-top: 3px; }
-    .metric.c-red    .m-val { color: var(--red);    }
-    .metric.c-green  .m-val { color: var(--green);  }
-    .metric.c-amber  .m-val { color: var(--amber);  }
-    .metric          .m-val { color: var(--purple);  }
 
-    /* ── card ── */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.35rem;
-      margin-bottom: 1.1rem; box-shadow: var(--shadow);
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.35rem; margin-bottom: 1.1rem; }
 
-    /* ── spotlight ── */
     .spotlight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.1rem; margin-bottom: 1.1rem; }
-    .sp-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.35rem;
-      box-shadow: var(--shadow); transition: box-shadow .2s, transform .2s;
-    }
-    .sp-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .sp-card.best { border-top: 3px solid var(--purple); }
+    .sp-card { background: var(--surface); border: 1px solid var(--border); padding: 1.35rem; border-radius: 0 0 var(--radius) var(--radius); }
+    .sp-card.best { border-top: 3px solid var(--orange); }
     .sp-card.grow { border-top: 3px solid var(--amber); }
-
-    .sp-tag {
-      font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px;
-      display: inline-flex; align-items: center; gap: 5px; margin-bottom: 14px;
-      letter-spacing: 0.03em;
-    }
-    .sp-tag.best { background: var(--purple-bg); color: var(--purple-txt); }
-    .sp-tag.grow { background: var(--amber-bg);  color: var(--amber-txt);  }
-
+    .sp-tag { font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 14px; }
+    .sp-tag.best { background: var(--orange-bg); color: var(--orange-txt); }
+    .sp-tag.grow { background: var(--amber-bg);  color: var(--amber-txt); }
     .av-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .av {
-      width: 46px; height: 46px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(109,76,255,0.20);
-    }
+    .av { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
     .av-name  { font-size: 15px; font-weight: 600; }
     .av-score { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-    .quote {
-      font-size: 13px; color: var(--text2); line-height: 1.7;
-      border-left: 3px solid var(--border2); padding-left: 12px; margin-bottom: 14px;
-      font-style: italic;
-    }
-    .quote.best { border-color: var(--purple); }
+    .quote { font-size: 13px; color: var(--text2); line-height: 1.7; border-left: 3px solid; padding-left: 12px; margin-bottom: 14px; font-style: italic; border-radius: 0; }
+    .quote.best { border-color: var(--orange); }
     .quote.grow { border-color: var(--amber); }
-
     .sp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
     .sp-stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 9px 12px; }
     .sp-stat .s-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; font-weight: 500; }
     .sp-stat .s-val   { font-size: 14px; font-weight: 600; }
-
     .bar-wrap { margin-top: 4px; }
     .bar-head { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
     .bar-track { background: var(--surface2); border-radius: 6px; height: 7px; overflow: hidden; }
-    .bar-fill  { height: 7px; border-radius: 6px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+    .bar-fill  { height: 7px; border-radius: 6px; transition: width .5s ease; }
 
-    /* ── rank list ── */
     .rank-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .rank-row:last-child { border-bottom: none; }
     .rank-num  { font-size: 12px; color: var(--text3); width: 20px; text-align: center; flex-shrink: 0; font-weight: 600; }
-    .rank-row:first-child .rank-num { color: var(--purple); }
-    .sm-av     { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
-    .r-name    { flex: 1; font-size: 13px; font-weight: 500; }
-    .r-track   { width: 100px; background: var(--surface2); border-radius: 6px; height: 5px; overflow: hidden; flex-shrink: 0; }
-    .r-fill    { height: 5px; border-radius: 6px; }
-    .r-score   { font-size: 12px; font-weight: 700; color: var(--text2); width: 32px; text-align: right; flex-shrink: 0; }
+    .rank-row:first-child .rank-num { color: var(--orange); }
+    .sm-av { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .r-name  { flex: 1; font-size: 13px; font-weight: 500; }
+    .r-track { width: 100px; background: var(--surface2); border-radius: 6px; height: 5px; overflow: hidden; flex-shrink: 0; }
+    .r-fill  { height: 5px; border-radius: 6px; }
+    .r-score { font-size: 12px; font-weight: 700; color: var(--text2); width: 32px; text-align: right; flex-shrink: 0; }
 
-    /* ── table rekap ── */
     .tbl-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 580px; }
-    th {
-      font-size: 11px; font-weight: 600; color: var(--text3);
-      text-transform: uppercase; letter-spacing: .07em;
-      padding: 9px 10px; border-bottom: 1.5px solid var(--border2); text-align: left;
-      white-space: nowrap;
-    }
-    td { padding: 10px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    th { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; padding: 9px 10px; border-bottom: 1.5px solid var(--border2); text-align: left; white-space: nowrap; }
+    td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--surface2); transition: background .15s; }
+    tr:hover td { background: var(--surface2); }
     .td-emp { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .badge {
-      font-size: 11px; padding: 3px 9px; border-radius: 20px;
-      font-weight: 600; white-space: nowrap;
-    }
+    .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
     .badge.pos  { background: var(--green-bg); color: var(--green-txt); }
-    .badge.neg  { background: var(--red-bg);   color: var(--red-txt);   }
-    .badge.zero { background: var(--surface2); color: var(--text2);     }
+    .badge.neg  { background: var(--red-bg);   color: var(--red-txt); }
+    .badge.zero { background: var(--surface2); color: var(--text2); }
 
-    /* ── loading / error ── */
     .state-box { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 14px; }
-    .spinner {
-      width: 26px; height: 26px;
-      border: 2.5px solid var(--border2);
-      border-top-color: var(--purple);
-      border-radius: 50%; animation: spin .7s linear infinite;
-      margin: 0 auto 14px;
-    }
+    .spinner { width: 26px; height: 26px; border: 2.5px solid var(--border2); border-top-color: var(--orange); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 14px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── avatar palette (ungu-biru-hijau-hangat) ── */
-    .av-0 { background: #ddd5ff; color: #3d1fa8; }
-    .av-1 { background: #c7d9ff; color: #1a3d8b; }
-    .av-2 { background: #c4f0e2; color: #0a6648; }
-    .av-3 { background: #fde8c0; color: #7a4a00; }
-    .av-4 { background: #ffd6e0; color: #8b1530; }
-    .av-5 { background: #d9f5b0; color: #2d5a00; }
+    .av-0 { background: #fde0d3; color: #8c3518; }
+    .av-1 { background: #d4e4f7; color: #1a3d6e; }
+    .av-2 { background: #d4f0e6; color: #0a5c3a; }
+    .av-3 { background: #fdefd3; color: #7a4a00; }
+    .av-4 { background: #e8d8f7; color: #4a1e7a; }
+    .av-5 { background: #daefd6; color: #2d5a00; }
 
-    @media (max-width: 520px) {
-      .spotlight-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 520px) { .spotlight-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 <div class="shell">
-
   <div class="top-bar">
-    <div class="top-bar-left">
-      <div class="logo-dot"><i class="ti ti-chart-bar"></i></div>
-      <h1>Presensi<span>.</span></h1>
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-report-analytics" aria-hidden="true"></i></div>
+      <span class="brand-name">Presensi<span>.</span></span>
     </div>
     <div class="filters">
       <select id="selBulan">
@@ -256,234 +165,90 @@
       <select id="selTahun"></select>
     </div>
   </div>
-
   <div id="app"><div class="state-box"><div class="spinner"></div>Memuat data...</div></div>
-
 </div>
-
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbzdnuBcu7U9PEZI6gg_MoOS6kLhbLw72sB7pmJGF7mfLEgg5YAVbFwDksovoSvRryCp/exec";
+const avatarMap = {}; let avatarIdx = 0;
+function getAvatar(n) { if (avatarMap[n]===undefined) avatarMap[n]=avatarIdx++%6; return avatarMap[n]; }
+function initials(n) { return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+const bulanNames=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const medals=['#f07040','#f5957a','#fab59f','#fcd4c6','#fde8e2','#fdf0ec'];
+function fmtRp(v){if(!v||v===0)return'Rp0';const a=Math.abs(v),s=a>=1000000?(a/1000000).toFixed(1).replace('.0','')+'jt':Math.round(a/1000)+'rb';return(v<0?'-':'+')+' Rp'+s;}
 
-const avatarMap = {};
-let avatarIdx = 0;
-function getAvatar(nama) {
-  if (avatarMap[nama] === undefined) avatarMap[nama] = avatarIdx++ % 6;
-  return avatarMap[nama];
-}
-function initials(nama) {
-  return nama.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
-}
-
-const bulanNames = ['','Januari','Februari','Maret','April','Mei','Juni',
-                    'Juli','Agustus','September','Oktober','November','Desember'];
-const medals = ['#6d4cff','#8b6dff','#a78bff','#c3acff','#ddd5ff','#bbaeff'];
-
-function fmtRp(val) {
-  if (!val || val === 0) return 'Rp0';
-  const abs = Math.abs(val);
-  const str = abs >= 1000000
-    ? (abs/1000000).toFixed(1).replace('.0','') + 'jt'
-    : (abs/1000).toFixed(0) + 'rb';
-  return (val < 0 ? '-' : '+') + 'Rp' + str;
+function initFilters(){
+  const now=new Date(),selB=document.getElementById('selBulan'),selY=document.getElementById('selTahun');
+  selB.value=now.getMonth()+1;
+  for(let y=2024;y<=now.getFullYear()+1;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===now.getFullYear())o.selected=true;selY.appendChild(o);}
+  selB.addEventListener('change',loadData);selY.addEventListener('change',loadData);
 }
 
-function initFilters() {
-  const now  = new Date();
-  const selB = document.getElementById('selBulan');
-  const selY = document.getElementById('selTahun');
-  selB.value = now.getMonth() + 1;
-  for (let y = 2024; y <= now.getFullYear() + 1; y++) {
-    const o = document.createElement('option');
-    o.value = y; o.textContent = y;
-    if (y === now.getFullYear()) o.selected = true;
-    selY.appendChild(o);
-  }
-  selB.addEventListener('change', loadData);
-  selY.addEventListener('change', loadData);
-}
-
-async function loadData() {
-  const b = document.getElementById('selBulan').value;
-  const y = document.getElementById('selTahun').value;
-  document.getElementById('app').innerHTML =
-    '<div class="state-box"><div class="spinner"></div>Memuat data...</div>';
-  try {
-    const res  = await fetch(`${API_URL}?action=dashboard&bulan=${b}&tahun=${y}`);
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    render(data, parseInt(b), parseInt(y));
-  } catch (err) {
-    document.getElementById('app').innerHTML =
-      `<div class="state-box"><i class="ti ti-wifi-off" style="font-size:28px;display:block;margin-bottom:10px;color:var(--purple);"></i>
-       Gagal memuat data.<br><small style="color:var(--text3)">${err.message}</small></div>`;
+async function loadData(){
+  const b=document.getElementById('selBulan').value,y=document.getElementById('selTahun').value;
+  document.getElementById('app').innerHTML='<div class="state-box"><div class="spinner"></div>Memuat data...</div>';
+  try{
+    const res=await fetch(`${API_URL}?action=dashboard&bulan=${b}&tahun=${y}`);
+    const data=await res.json();
+    if(data.error)throw new Error(data.error);
+    render(data,parseInt(b),parseInt(y));
+  }catch(err){
+    document.getElementById('app').innerHTML=`<div class="state-box"><i class="ti ti-wifi-off" style="font-size:28px;display:block;margin-bottom:10px;color:var(--orange);"></i>Gagal memuat data.<br><small style="color:var(--text3)">${err.message}</small></div>`;
   }
 }
 
-function render(data, b, y) {
-  const { summary, scores, rekap } = data;
-  const totalKaryawan = rekap.length;
-
-  const jams = rekap.filter(e => e.rerataMasuk && e.rerataMasuk !== '—')
-    .map(e => { const [h,m] = e.rerataMasuk.split(':').map(Number); return h*60+m; });
-  const avgMin = jams.length ? Math.round(jams.reduce((a,b)=>a+b,0)/jams.length) : null;
-  const avgJam = avgMin !== null
-    ? String(Math.floor(avgMin/60)).padStart(2,'0')+':'+String(avgMin%60).padStart(2,'0')
-    : '—';
-
-  document.getElementById('app').innerHTML = `
+function render(data,b,y){
+  const {summary,scores,rekap}=data;
+  const jams=rekap.filter(e=>e.rerataMasuk&&e.rerataMasuk!=='—').map(e=>{const[h,m]=e.rerataMasuk.split(':').map(Number);return h*60+m;});
+  const avgMin=jams.length?Math.round(jams.reduce((a,b)=>a+b,0)/jams.length):null;
+  const avgJam=avgMin!==null?String(Math.floor(avgMin/60)).padStart(2,'0')+':'+String(avgMin%60).padStart(2,'0'):'—';
+  document.getElementById('app').innerHTML=`
     <p class="label">Ringkasan · ${bulanNames[b]} ${y}</p>
-
     <div class="metric-grid">
-      <div class="metric">
-        <div class="m-icon"><i class="ti ti-users"></i></div>
-        <div class="m-label">Total karyawan</div>
-        <div class="m-val">${totalKaryawan}</div>
-        <div class="m-sub">aktif bulan ini</div>
-      </div>
-      <div class="metric c-amber">
-        <div class="m-icon"><i class="ti ti-clock"></i></div>
-        <div class="m-label">Rerata jam masuk</div>
-        <div class="m-val">${avgJam}</div>
-        <div class="m-sub">rata-rata semua</div>
-      </div>
-      <div class="metric c-red">
-        <div class="m-icon"><i class="ti ti-alert-circle"></i></div>
-        <div class="m-label">Total denda</div>
-        <div class="m-val">${fmtRp(summary.totalDenda)}</div>
-        <div class="m-sub">${summary.dendaCount} karyawan terdenda</div>
-      </div>
-      <div class="metric c-green">
-        <div class="m-icon"><i class="ti ti-trending-up"></i></div>
-        <div class="m-label">Total lembur</div>
-        <div class="m-val">${fmtRp(summary.totalLembur)}</div>
-        <div class="m-sub">${summary.lemburCount} karyawan</div>
-      </div>
+      <div class="metric"><div class="m-icon"><i class="ti ti-users" aria-hidden="true"></i></div><div class="m-label">Total karyawan</div><div class="m-val">${rekap.length}</div><div class="m-sub">aktif bulan ini</div></div>
+      <div class="metric c-amber"><div class="m-icon"><i class="ti ti-clock" aria-hidden="true"></i></div><div class="m-label">Rerata jam masuk</div><div class="m-val">${avgJam}</div><div class="m-sub">rata-rata semua</div></div>
+      <div class="metric c-red"><div class="m-icon"><i class="ti ti-alert-circle" aria-hidden="true"></i></div><div class="m-label">Total denda</div><div class="m-val">${fmtRp(summary.totalDenda)}</div><div class="m-sub">${summary.dendaCount} karyawan terdenda</div></div>
+      <div class="metric c-green"><div class="m-icon"><i class="ti ti-trending-up" aria-hidden="true"></i></div><div class="m-label">Total lembur</div><div class="m-val">${fmtRp(summary.totalLembur)}</div><div class="m-sub">${summary.lemburCount} karyawan</div></div>
     </div>
-
     <p class="label">Spotlight karyawan</p>
     <div class="spotlight-grid" id="spotlight"></div>
-
-    <div class="card">
-      <p class="label">Peringkat semua karyawan</p>
-      <div id="rank-list"></div>
-    </div>
-
-    <div class="card">
-      <p class="label">Rekap karyawan</p>
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Karyawan</th>
-              <th style="text-align:center;">Hadir</th>
-              <th style="text-align:center;">Izin</th>
-              <th style="text-align:center;">Sakit</th>
-              <th style="text-align:right;">Lembur</th>
-              <th style="text-align:right;">Denda</th>
-              <th style="text-align:right;">Net</th>
-            </tr>
-          </thead>
-          <tbody id="tbl-body"></tbody>
-        </table>
-      </div>
-    </div>
-  `;
-
-  renderSpotlight(scores, rekap);
-  renderRank(scores);
-  renderTable(rekap);
+    <div class="card"><p class="label">Peringkat semua karyawan</p><div id="rank-list"></div></div>
+    <div class="card"><p class="label">Rekap karyawan</p><div class="tbl-wrap"><table>
+      <thead><tr><th>Karyawan</th><th style="text-align:center">Hadir</th><th style="text-align:center">Izin</th><th style="text-align:center">Sakit</th><th style="text-align:right">Lembur</th><th style="text-align:right">Denda</th><th style="text-align:right">Net</th></tr></thead>
+      <tbody id="tbl-body"></tbody>
+    </table></div></div>`;
+  renderSpotlight(scores,rekap);renderRank(scores);renderTable(rekap);
 }
 
-const quotesBest = [
-  n => `Konsistensi adalah kekuatan terbesar. ${n} hadir penuh dan selalu tepat waktu — teladan nyata bagi tim.`,
-  n => `${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`,
-];
-const quotesGrow = [
-  n => `Dengan sedikit motivasi, ${n} bisa melompat jauh bulan depan.`,
-  n => `${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`,
-];
+const qBest=[n=>`Konsistensi adalah kekuatan terbesar. ${n} hadir penuh dan selalu tepat waktu — teladan nyata bagi tim.`,n=>`${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`];
+const qGrow=[n=>`Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit penyesuaian, ${n} bisa melompat jauh bulan depan.`,n=>`${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`];
 
-function spCard(e, rekap, type, rank, totalHari) {
-  const r    = rekap.find(x => x.nama === e.nama) || {};
-  const idx  = getAvatar(e.nama);
-  const qArr = type === 'best' ? quotesBest : quotesGrow;
-  const q    = qArr[rank % qArr.length](e.nama);
-  const tag  = type === 'best'
-    ? `<span class="sp-tag best"><i class="ti ti-star" style="font-size:12px"></i>Bintang bulan ini</span>`
-    : `<span class="sp-tag grow"><i class="ti ti-trending-up" style="font-size:12px"></i>Ruang untuk tumbuh</span>`;
-  const barColor = type === 'best'
-    ? 'linear-gradient(90deg,#6d4cff,#a78bff)'
-    : 'linear-gradient(90deg,#f5a623,#ffd08a)';
-
-  return `
-    <div class="sp-card ${type}">
-      ${tag}
-      <div class="av-row">
-        <div class="av av-${idx}">${initials(e.nama)}</div>
-        <div>
-          <div class="av-name">${e.nama}</div>
-          <div class="av-score">Skor ${e.skor} · Peringkat #${rank}</div>
-        </div>
-      </div>
-      <div class="quote ${type}">${q}</div>
-      <div class="sp-stats">
-        <div class="sp-stat"><div class="s-label">Kehadiran</div><div class="s-val">${r.hadir||0} / ${totalHari} hari</div></div>
-        <div class="sp-stat"><div class="s-label">Rerata masuk</div><div class="s-val">${e.rerataMasuk||'—'}</div></div>
-      </div>
-      <div class="bar-wrap">
-        <div class="bar-head"><span>Skor keseluruhan</span><span>${e.skor} / 100</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${e.skor}%;background:${barColor};"></div></div>
-      </div>
-    </div>`;
+function spCard(e,rekap,type,rank,totalHari){
+  const r=rekap.find(x=>x.nama===e.nama)||{},idx=getAvatar(e.nama);
+  const q=(type==='best'?qBest:qGrow)[rank%2](e.nama);
+  const tag=type==='best'?`<span class="sp-tag best"><i class="ti ti-star" aria-hidden="true" style="font-size:12px"></i>Bintang bulan ini</span>`:`<span class="sp-tag grow"><i class="ti ti-trending-up" aria-hidden="true" style="font-size:12px"></i>Ruang untuk tumbuh</span>`;
+  const bar=type==='best'?'var(--orange)':'var(--amber)';
+  return `<div class="sp-card ${type}">${tag}<div class="av-row"><div class="av av-${idx}">${initials(e.nama)}</div><div><div class="av-name">${e.nama}</div><div class="av-score">Skor ${e.skor} · Peringkat #${rank}</div></div></div><div class="quote ${type}">${q}</div><div class="sp-stats"><div class="sp-stat"><div class="s-label">Kehadiran</div><div class="s-val">${r.hadir||0} / ${totalHari} hari</div></div><div class="sp-stat"><div class="s-label">Rerata masuk</div><div class="s-val">${e.rerataMasuk||'—'}</div></div></div><div class="bar-wrap"><div class="bar-head"><span>Skor keseluruhan</span><span>${e.skor} / 100</span></div><div class="bar-track"><div class="bar-fill" style="width:${e.skor}%;background:${bar};"></div></div></div></div>`;
 }
 
-function renderSpotlight(scores, rekap) {
-  if (!scores.length) return;
-  const totalHari = Math.max(...rekap.map(r => r.hariKerja || r.hadir || 1));
-  const best = scores[0];
-  const grow = scores[scores.length - 1];
-  document.getElementById('spotlight').innerHTML =
-    spCard(best, rekap, 'best', 1, totalHari) +
-    spCard(grow, rekap, 'grow', scores.length, totalHari);
+function renderSpotlight(scores,rekap){
+  if(!scores.length)return;
+  const totalHari=Math.max(...rekap.map(r=>r.hariKerja||r.hadir||1));
+  document.getElementById('spotlight').innerHTML=spCard(scores[0],rekap,'best',1,totalHari)+spCard(scores[scores.length-1],rekap,'grow',scores.length,totalHari);
 }
 
-function renderRank(scores) {
-  const el = document.getElementById('rank-list');
-  if (!scores.length) { el.innerHTML = '<div class="state-box" style="padding:1rem;">Tidak ada data.</div>'; return; }
-  el.innerHTML = scores.map((e, i) => `
-    <div class="rank-row">
-      <span class="rank-num">${i+1}</span>
-      <div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div>
-      <span class="r-name">${e.nama}</span>
-      <div class="r-track"><div class="r-fill" style="width:${e.skor}%;background:${medals[i]||'#bbaeff'};"></div></div>
-      <span class="r-score">${e.skor}</span>
-    </div>`).join('');
+function renderRank(scores){
+  const el=document.getElementById('rank-list');
+  if(!scores.length){el.innerHTML='<div class="state-box" style="padding:1rem;">Tidak ada data.</div>';return;}
+  el.innerHTML=scores.map((e,i)=>`<div class="rank-row"><span class="rank-num">${i+1}</span><div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div><span class="r-name">${e.nama}</span><div class="r-track"><div class="r-fill" style="width:${e.skor}%;background:${medals[Math.min(i,5)]};"></div></div><span class="r-score">${e.skor}</span></div>`).join('');
 }
 
-function renderTable(rekap) {
-  const tbody = document.getElementById('tbl-body');
-  if (!rekap.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px;">Tidak ada data.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = rekap.map(e => {
-    const net = e.net || 0;
-    const bc  = net > 0 ? 'pos' : net < 0 ? 'neg' : 'zero';
-    return `
-      <tr>
-        <td><div class="td-emp"><div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div>${e.nama}</div></td>
-        <td style="text-align:center;">${e.hadir}</td>
-        <td style="text-align:center;">${e.izin}</td>
-        <td style="text-align:center;">${e.sakit}</td>
-        <td style="text-align:right;color:${(e.totalLembur||0)>0?'var(--green)':'var(--text3)'};">${fmtRp(e.totalLembur||0)}</td>
-        <td style="text-align:right;color:${(e.totalDenda||0)<0?'var(--red)':'var(--text3)'};">${fmtRp(e.totalDenda||0)}</td>
-        <td style="text-align:right;"><span class="badge ${bc}">${fmtRp(net)}</span></td>
-      </tr>`;
-  }).join('');
+function renderTable(rekap){
+  const tbody=document.getElementById('tbl-body');
+  if(!rekap.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px;">Tidak ada data.</td></tr>';return;}
+  tbody.innerHTML=rekap.map(e=>{const net=e.net||0,bc=net>0?'pos':net<0?'neg':'zero';return`<tr><td><div class="td-emp"><div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div>${e.nama}</div></td><td style="text-align:center">${e.hadir}</td><td style="text-align:center">${e.izin}</td><td style="text-align:center">${e.sakit}</td><td style="text-align:right;color:${(e.totalLembur||0)>0?'var(--green)':'var(--text3)'};">${fmtRp(e.totalLembur||0)}</td><td style="text-align:right;color:${(e.totalDenda||0)<0?'var(--red)':'var(--text3)'};">${fmtRp(e.totalDenda||0)}</td><td style="text-align:right"><span class="badge ${bc}">${fmtRp(net)}</span></td></tr>`;}).join('');
 }
 
-initFilters();
-loadData();
+initFilters();loadData();
 </script>
 </body>
 </html>

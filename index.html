@@ -143,36 +143,71 @@
   .award-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
   .award-card {
     border-radius: var(--radius); padding: 16px;
-    display: flex; align-items: center; gap: 14px;
     animation: fadeUp .5s both;
   }
   .award-card.best {
     background: var(--orange);
-    box-shadow: 0 4px 16px rgba(232,96,60,.22);
+    box-shadow: 0 4px 16px rgba(232,96,60,.25);
   }
   .award-card.grow {
     background: #FEF9EC;
     box-shadow: 0 2px 10px rgba(0,0,0,.06);
   }
+
+  /* header row: icon + teks */
+  .award-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
   .award-icon {
-    font-size: 26px; width: 50px; height: 50px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
+    font-size: 24px; width: 48px; height: 48px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; border-radius: 50%;
   }
   .award-card.best .award-icon { background: rgba(255,255,255,.2); }
   .award-card.grow .award-icon { background: rgba(245,166,35,.15); }
-  .award-tag  {
+  .award-tag {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1.5px; margin-bottom: 3px;
   }
-  .award-card.best .award-tag  { color: rgba(255,255,255,.7); }
+  .award-card.best .award-tag  { color: rgba(255,255,255,.75); }
   .award-card.grow .award-tag  { color: #B07800; }
-  .award-name { font-size: 19px; font-weight: 800; line-height: 1.1; }
+  .award-name { font-size: 19px; font-weight: 800; line-height: 1.15; margin-bottom: 4px; }
   .award-card.best .award-name { color: #fff; }
   .award-card.grow .award-name { color: var(--ink); }
-  .award-detail { font-size: 12px; margin-top: 3px; }
-  .award-card.best .award-detail { color: rgba(255,255,255,.65); }
-  .award-card.grow .award-detail { color: var(--ink3); }
+  .award-quote { font-size: 12px; line-height: 1.55; }
+  .award-card.best .award-quote { color: rgba(255,255,255,.72); }
+  .award-card.grow .award-quote { color: var(--ink3); }
+
+  /* divider tipis */
+  .award-divider { height: 1px; margin-bottom: 12px; }
+  .award-card.best .award-divider { background: rgba(255,255,255,.2); }
+  .award-card.grow .award-divider { background: rgba(0,0,0,.07); }
+
+  /* stat widgets */
+  .award-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .award-stat { border-radius: 10px; padding: 9px 12px; }
+  .award-card.best .award-stat { background: rgba(255,255,255,.18); }
+  .award-card.grow .award-stat { background: rgba(0,0,0,.05); }
+  .award-stat-label { font-size: 11px; font-weight: 500; margin-bottom: 2px; }
+  .award-card.best .award-stat-label { color: rgba(255,255,255,.65); }
+  .award-card.grow .award-stat-label { color: var(--ink3); }
+  .award-stat-val { font-size: 14px; font-weight: 700; }
+  .award-card.best .award-stat-val { color: #fff; }
+  .award-card.grow .award-stat-val { color: var(--ink); }
+
+  /* score bar */
+  .award-score-head {
+    display: flex; justify-content: space-between;
+    font-size: 12px; font-weight: 600; margin-bottom: 6px;
+  }
+  .award-card.best .award-score-head { color: rgba(255,255,255,.8); }
+  .award-card.grow .award-score-head { color: var(--ink2); }
+  .award-score-track { height: 8px; border-radius: 99px; overflow: hidden; }
+  .award-card.best .award-score-track { background: rgba(255,255,255,.25); }
+  .award-card.grow .award-score-track { background: rgba(0,0,0,.08); }
+  .award-score-fill {
+    height: 100%; border-radius: 99px;
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .award-card.best .award-score-fill { background: #fff; }
+  .award-card.grow .award-score-fill { background: #F5A623; }
 
   /* ── PANEL ── */
   .panel {
@@ -331,6 +366,7 @@
     .filter-bar { padding: 12px 32px; }
     .main { padding: 28px 32px 80px; max-width: 1200px; }
     .kpi-grid { grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+    .award-grid { grid-template-columns: repeat(2,1fr); }
     .award-grid { grid-template-columns: repeat(2,1fr); }
     .two-col { display: grid; grid-template-columns: 1fr 1.6fr; gap: 16px; margin-bottom: 24px; }
     .two-col .panel { margin-bottom: 0; }
@@ -591,30 +627,68 @@ function renderDashboard(data, b, y) {
     <!-- SPOTLIGHT -->
     <div class="sec-title">Spotlight Karyawan</div>
     <div class="award-grid">
-      ${best ? `
-      <div class="award-card best">
-        <div class="award-icon">🏆</div>
-        <div style="flex:1;min-width:0;">
-          <div class="award-tag">Bintang Bulan Ini</div>
-          <div class="award-name">${best.nama}</div>
-          <div class="award-detail">${Q_BEST[0](best.nama)}</div>
-          <div class="award-detail" style="margin-top:6px;opacity:.85;">
-            Skor ${best.skor} · ${(rekap.find(r=>r.nama===best.nama)||{}).hadir||0} / ${totalHari} hari · ${best.rerataMasuk||'—'}
+      ${best ? (() => {
+        const rBest = rekap.find(r => r.nama === best.nama) || {};
+        return `
+        <div class="award-card best">
+          <div class="award-head">
+            <div class="award-icon">🏆</div>
+            <div>
+              <div class="award-tag">Bintang Bulan Ini</div>
+              <div class="award-name">${best.nama}</div>
+              <div class="award-quote">${Q_BEST[0](best.nama)}</div>
+            </div>
           </div>
-        </div>
-      </div>` : ''}
-      ${grow && grow.nama !== best?.nama ? `
-      <div class="award-card grow">
-        <div class="award-icon">🌱</div>
-        <div style="flex:1;min-width:0;">
-          <div class="award-tag">Ruang untuk Tumbuh</div>
-          <div class="award-name">${grow.nama}</div>
-          <div class="award-detail" style="color:var(--ink2);">${Q_GROW[0](grow.nama)}</div>
-          <div class="award-detail" style="margin-top:6px;">
-            Skor ${grow.skor} · ${(rekap.find(r=>r.nama===grow.nama)||{}).hadir||0} / ${totalHari} hari · ${grow.rerataMasuk||'—'}
+          <div class="award-divider"></div>
+          <div class="award-stats">
+            <div class="award-stat">
+              <div class="award-stat-label">Kehadiran</div>
+              <div class="award-stat-val">${rBest.hadir||0} / ${totalHari} hari</div>
+            </div>
+            <div class="award-stat">
+              <div class="award-stat-label">Rerata masuk</div>
+              <div class="award-stat-val">${best.rerataMasuk||'—'}</div>
+            </div>
           </div>
-        </div>
-      </div>` : ''}
+          <div class="award-score-head">
+            <span>Skor keseluruhan</span><span>${best.skor} / 100</span>
+          </div>
+          <div class="award-score-track">
+            <div class="award-score-fill" style="width:0%" data-w="${best.skor}%"></div>
+          </div>
+        </div>`;
+      })() : ''}
+      ${grow && grow.nama !== best?.nama ? (() => {
+        const rGrow = rekap.find(r => r.nama === grow.nama) || {};
+        return `
+        <div class="award-card grow">
+          <div class="award-head">
+            <div class="award-icon">🌱</div>
+            <div>
+              <div class="award-tag">Ruang untuk Tumbuh</div>
+              <div class="award-name">${grow.nama}</div>
+              <div class="award-quote">${Q_GROW[0](grow.nama)}</div>
+            </div>
+          </div>
+          <div class="award-divider"></div>
+          <div class="award-stats">
+            <div class="award-stat">
+              <div class="award-stat-label">Kehadiran</div>
+              <div class="award-stat-val">${rGrow.hadir||0} / ${totalHari} hari</div>
+            </div>
+            <div class="award-stat">
+              <div class="award-stat-label">Rerata masuk</div>
+              <div class="award-stat-val">${grow.rerataMasuk||'—'}</div>
+            </div>
+          </div>
+          <div class="award-score-head">
+            <span>Skor keseluruhan</span><span>${grow.skor} / 100</span>
+          </div>
+          <div class="award-score-track">
+            <div class="award-score-fill" style="width:0%" data-w="${grow.skor}%"></div>
+          </div>
+        </div>`;
+      })() : ''}
     </div>
 
     <!-- RANK + REKAP -->
@@ -689,9 +763,9 @@ function renderDashboard(data, b, y) {
   document.getElementById('dashboard-content').innerHTML = html;
   showLoading(false);
 
-  // animate rank bars
+  // animate rank bars + spotlight score bars
   setTimeout(() => {
-    document.querySelectorAll('.rank-fill[data-w]').forEach(el => {
+    document.querySelectorAll('.rank-fill[data-w], .award-score-fill[data-w]').forEach(el => {
       el.style.width = el.dataset.w;
     });
   }, 80);

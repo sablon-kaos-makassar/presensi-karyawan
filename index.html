@@ -493,7 +493,7 @@ const Q_BEST = [
   n => `${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`,
 ];
 const Q_GROW = [
-  n => `Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit motivasi, ${n} bisa melompat jauh bulan depan.`,
+  n => `Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit penyesuaian, ${n} bisa melompat jauh bulan depan.`,
   n => `${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`,
 ];
 
@@ -582,12 +582,8 @@ function renderDashboard(data, b, y) {
   const periodeLabel = `${BULAN_NAMES[b]} ${y}`;
   const totalKaryawan = rekap.length;
 
-  // rerata jam masuk
-  const jams = rekap.filter(e => e.rerataMasuk && e.rerataMasuk !== '—')
-    .map(e => { const [h,m] = e.rerataMasuk.split(':').map(Number); return h*60+m; });
-  const avgMin = jams.length ? Math.round(jams.reduce((a,b)=>a+b,0)/jams.length) : null;
-  const avgJam = avgMin !== null
-    ? String(Math.floor(avgMin/60)).padStart(2,'0')+':'+String(avgMin%60).padStart(2,'0') : '—';
+  // rerata jam masuk dari summary (dihitung di Apps Script)
+  const avgJam = summary.rerataMasukGlobal || '—';
 
   // spotlight
   const best = scores[0];
@@ -639,7 +635,7 @@ function renderDashboard(data, b, y) {
               <div class="award-quote">${Q_BEST[0](best.nama)}</div>
             </div>
           </div>
-          
+          <div class="award-divider"></div>
           <div class="award-stats">
             <div class="award-stat">
               <div class="award-stat-label">Kehadiran</div>
@@ -670,7 +666,7 @@ function renderDashboard(data, b, y) {
               <div class="award-quote">${Q_GROW[0](grow.nama)}</div>
             </div>
           </div>
-          
+          <div class="award-divider"></div>
           <div class="award-stats">
             <div class="award-stat">
               <div class="award-stat-label">Kehadiran</div>

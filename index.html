@@ -498,7 +498,23 @@ const Q_GROW = [
 ];
 
 // ── NAV ──
+// function switchTab(id, btn) {
+//   document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+//   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+//   document.getElementById('tab-' + id).classList.add('active');
+//   btn.classList.add('active');
+// }
 function switchTab(id, btn) {
+  const links = {
+    'penjahit' : 'https://sablon-kaos-makassar.github.io/laporan-penjahit/',
+    'keuangan' : 'https://sablon-kaos-makassar.github.io/laporan-keuangan/',
+    'inventori': 'https://username.github.io/inventori',
+    'produksi' : 'https://username.github.io/produksi',
+  };
+  if (links[id]) {
+    window.location.href = links[id];
+    return;
+  }
   document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');

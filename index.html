@@ -1,254 +1,701 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Presensi</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg:         #f7f6f3;
-      --surface:    #ffffff;
-      --surface2:   #f2f0ec;
-      --border:     rgba(0,0,0,0.07);
-      --border2:    rgba(0,0,0,0.13);
-      --text:       #1c1b19;
-      --text2:      #6b6862;
-      --text3:      #aeaba3;
-      --orange:     #f07040;
-      --orange-lt:  #f5957a;
-      --orange-bg:  #fdf0ec;
-      --orange-txt: #8c3518;
-      --green:      #22c98b;
-      --green-bg:   #e0faf2;
-      --green-txt:  #0a6648;
-      --amber:      #f5a623;
-      --amber-bg:   #fff4de;
-      --amber-txt:  #7a4a00;
-      --red:        #f04f4f;
-      --red-bg:     #fdefef;
-      --red-txt:    #8b1515;
-      --radius:     14px;
-      --radius-sm:  9px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg:         #161513;
-        --surface:    #201e1b;
-        --surface2:   #2a2724;
-        --border:     rgba(255,255,255,0.07);
-        --border2:    rgba(255,255,255,0.13);
-        --text:       #f0ede8;
-        --text2:      #9e9a92;
-        --text3:      #5e5b55;
-        --orange-bg:  #3d1e10;
-        --orange-txt: #f5957a;
-        --green-bg:   #0a3d2a;
-        --green-txt:  #6de8bb;
-        --amber-bg:   #3d2a00;
-        --amber-txt:  #ffd08a;
-        --red-bg:     #3d1010;
-        --red-txt:    #ff9a9a;
-      }
-    }
-    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kelola – Presensi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .shell { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  :root {
+    --bg:       #FFFFFF;
+    --ink:      #1A1A1A;
+    --ink2:     #555555;
+    --ink3:     #999999;
+    --border:   #EBEBEB;
+    --orange:   #E8603C;
+    --orange-dk:#C94E2C;
+    --orange-lt:#FEF0EC;
+    --radius:   16px;
+  }
 
-    .top-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .brand-icon { width: 38px; height: 38px; border-radius: 11px; background: var(--orange); display: flex; align-items: center; justify-content: center; }
-    .brand-icon i { color: #fff; font-size: 19px; }
-    .brand-name { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
-    .brand-name span { color: var(--orange); }
-    .filters { display: flex; gap: 8px; }
-    select { font-size: 13px; padding: 7px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--surface); color: var(--text); cursor: pointer; font-weight: 500; }
-    select:focus { outline: none; border-color: var(--orange); }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-top: 110px;
+  }
 
-    .label { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; color: var(--text3); text-transform: uppercase; margin-bottom: 12px; }
+  /* ── STICKY HEADER ── */
+  .sticky-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    background: #fff;
+  }
 
-    .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 12px; margin-bottom: 1.75rem; }
-    .metric { background: var(--surface); border-radius: var(--radius); padding: 16px 18px; border: 1px solid var(--border); position: relative; overflow: hidden; }
-    .metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--orange); }
-    .metric.c-green::after { background: var(--green); }
-    .metric.c-red::after   { background: var(--red); }
-    .metric.c-amber::after { background: var(--amber); }
-    .metric .m-icon { font-size: 22px; margin-bottom: 10px; color: var(--orange); opacity: .55; }
-    .metric.c-green .m-icon { color: var(--green); }
-    .metric.c-red   .m-icon { color: var(--red); }
-    .metric.c-amber .m-icon { color: var(--amber); }
-    .metric .m-label { font-size: 12px; color: var(--text2); margin-bottom: 3px; font-weight: 500; }
-    .metric .m-val   { font-size: 24px; font-weight: 700; color: var(--orange); letter-spacing: -0.5px; }
-    .metric.c-green  .m-val { color: var(--green); }
-    .metric.c-red    .m-val { color: var(--red); }
-    .metric.c-amber  .m-val { color: var(--amber); }
-    .metric .m-sub   { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -.5px; }
+  .brand span { color: var(--orange); }
+  .hamburger {
+    width: 42px; height: 42px;
+    background: var(--orange-lt); border: none; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; touch-action: manipulation;
+  }
+  .hamburger svg { width: 20px; height: 20px; stroke: var(--orange); stroke-width: 2.2; fill: none; stroke-linecap: round; }
 
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.35rem; margin-bottom: 1.1rem; }
+  /* ── TAB NAV ── */
+  .tab-nav {
+    display: flex; overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; touch-action: pan-x;
+    border-bottom: 1.5px solid var(--border);
+    scrollbar-width: none; padding: 0 12px;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 13px 14px 11px;
+    border: none; background: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 600; color: var(--ink3);
+    cursor: pointer; white-space: nowrap;
+    border-bottom: 2.5px solid transparent; margin-bottom: -1.5px;
+    transition: color .2s, border-color .2s; flex-shrink: 0;
+    touch-action: manipulation;
+  }
+  .tab-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab-btn:hover:not(.active) { color: var(--ink2); }
 
-    .spotlight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.1rem; margin-bottom: 1.1rem; }
-    .sp-card { background: var(--surface); border: 1px solid var(--border); padding: 1.35rem; border-radius: 0 0 var(--radius) var(--radius); }
-    .sp-card.best { border-top: 3px solid var(--orange); }
-    .sp-card.grow { border-top: 3px solid var(--amber); }
-    .sp-tag { font-size: 11px; font-weight: 600; padding: 4px 11px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 14px; }
-    .sp-tag.best { background: var(--orange-bg); color: var(--orange-txt); }
-    .sp-tag.grow { background: var(--amber-bg);  color: var(--amber-txt); }
-    .av-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .av { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
-    .av-name  { font-size: 15px; font-weight: 600; }
-    .av-score { font-size: 12px; color: var(--text2); margin-top: 2px; }
-    .quote { font-size: 13px; color: var(--text2); line-height: 1.7; border-left: 3px solid; padding-left: 12px; margin-bottom: 14px; font-style: italic; border-radius: 0; }
-    .quote.best { border-color: var(--orange); }
-    .quote.grow { border-color: var(--amber); }
-    .sp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .sp-stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 9px 12px; }
-    .sp-stat .s-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; font-weight: 500; }
-    .sp-stat .s-val   { font-size: 14px; font-weight: 600; }
-    .bar-wrap { margin-top: 4px; }
-    .bar-head { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; font-weight: 500; }
-    .bar-track { background: var(--surface2); border-radius: 6px; height: 7px; overflow: hidden; }
-    .bar-fill  { height: 7px; border-radius: 6px; transition: width .5s ease; }
+  /* ── TAB PAGES ── */
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+  .placeholder {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 80px 20px; color: var(--ink3); font-size: 14px; gap: 10px;
+  }
+  .placeholder-icon { font-size: 40px; }
 
-    .rank-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-    .rank-row:last-child { border-bottom: none; }
-    .rank-num  { font-size: 12px; color: var(--text3); width: 20px; text-align: center; flex-shrink: 0; font-weight: 600; }
-    .rank-row:first-child .rank-num { color: var(--orange); }
-    .sm-av { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
-    .r-name  { flex: 1; font-size: 13px; font-weight: 500; }
-    .r-track { width: 100px; background: var(--surface2); border-radius: 6px; height: 5px; overflow: hidden; flex-shrink: 0; }
-    .r-fill  { height: 5px; border-radius: 6px; }
-    .r-score { font-size: 12px; font-weight: 700; color: var(--text2); width: 32px; text-align: right; flex-shrink: 0; }
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 11px 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .filter-bar select {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    padding: 9px 32px 9px 12px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    background: #F9F9F9; color: var(--ink);
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23E8603C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    cursor: pointer; transition: border-color .2s; flex: 1; min-width: 0;
+  }
+  .filter-bar select:focus { outline: none; border-color: var(--orange); }
+  .btn-filter {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px; font-weight: 700; padding: 10px 18px;
+    background: var(--orange); color: #fff; border: none; border-radius: 10px;
+    cursor: pointer; transition: background .2s, transform .1s;
+    box-shadow: 0 3px 10px rgba(232,96,60,.25);
+    white-space: nowrap; flex-shrink: 0; touch-action: manipulation;
+  }
+  .btn-filter:hover { background: var(--orange-dk); }
+  .btn-filter:active { transform: scale(.97); }
 
-    .tbl-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 580px; }
-    th { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; padding: 9px 10px; border-bottom: 1.5px solid var(--border2); text-align: left; white-space: nowrap; }
-    td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--surface2); }
-    .td-emp { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-    .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
-    .badge.pos  { background: var(--green-bg); color: var(--green-txt); }
-    .badge.neg  { background: var(--red-bg);   color: var(--red-txt); }
-    .badge.zero { background: var(--surface2); color: var(--text2); }
+  /* ── MAIN ── */
+  .main { padding: 20px 16px 80px; }
 
-    .state-box { text-align: center; padding: 3rem 1rem; color: var(--text2); font-size: 14px; }
-    .spinner { width: 26px; height: 26px; border: 2.5px solid var(--border2); border-top-color: var(--orange); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 14px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+  /* ── SECTION TITLE ── */
+  .sec-title {
+    font-size: 10px; font-weight: 700; color: var(--ink3);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+  }
 
-    .av-0 { background: #fde0d3; color: #8c3518; }
-    .av-1 { background: #d4e4f7; color: #1a3d6e; }
-    .av-2 { background: #d4f0e6; color: #0a5c3a; }
-    .av-3 { background: #fdefd3; color: #7a4a00; }
-    .av-4 { background: #e8d8f7; color: #4a1e7a; }
-    .av-5 { background: #daefd6; color: #2d5a00; }
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(2,1fr);
+    gap: 10px; margin-bottom: 24px;
+  }
+  .kpi-card {
+    border-radius: var(--radius); padding: 16px 14px;
+    animation: fadeUp .45s both;
+  }
+  .kpi-card.c-orange { background: #FEF0EC; }
+  .kpi-card.c-blue   { background: #EEF3FE; }
+  .kpi-card.c-teal   { background: #EBF8F8; }
+  .kpi-card.c-yellow { background: #FEF9EC; }
 
-    @media (max-width: 520px) { .spotlight-grid { grid-template-columns: 1fr; } }
-  </style>
+  .kpi-emoji { font-size: 22px; margin-bottom: 8px; display: block; }
+  .kpi-label { font-size: 12px; font-weight: 500; color: var(--ink2); margin-bottom: 4px; }
+  .kpi-value { font-size: clamp(20px,5vw,30px); font-weight: 800; line-height: 1; color: var(--ink); }
+  .kpi-sub   { font-size: 11px; color: var(--ink3); margin-top: 5px; line-height: 1.4; }
+
+  /* ── SPOTLIGHT / AWARD CARDS ── */
+  .award-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+  .award-card {
+    border-radius: var(--radius); padding: 16px;
+    display: flex; align-items: center; gap: 14px;
+    animation: fadeUp .5s both;
+  }
+  .award-card.best {
+    background: var(--orange);
+    box-shadow: 0 4px 16px rgba(232,96,60,.22);
+  }
+  .award-card.grow {
+    background: #FEF9EC;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  }
+  .award-icon {
+    font-size: 26px; width: 50px; height: 50px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+  }
+  .award-card.best .award-icon { background: rgba(255,255,255,.2); }
+  .award-card.grow .award-icon { background: rgba(245,166,35,.15); }
+  .award-tag  {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: 3px;
+  }
+  .award-card.best .award-tag  { color: rgba(255,255,255,.7); }
+  .award-card.grow .award-tag  { color: #B07800; }
+  .award-name { font-size: 19px; font-weight: 800; line-height: 1.1; }
+  .award-card.best .award-name { color: #fff; }
+  .award-card.grow .award-name { color: var(--ink); }
+  .award-detail { font-size: 12px; margin-top: 3px; }
+  .award-card.best .award-detail { color: rgba(255,255,255,.65); }
+  .award-card.grow .award-detail { color: var(--ink3); }
+
+  /* ── PANEL ── */
+  .panel {
+    background: #fff; border-radius: var(--radius);
+    padding: 16px 14px; margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    animation: fadeUp .55s both;
+  }
+  .panel-title {
+    font-size: 14px; font-weight: 700; color: var(--ink);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 7px;
+  }
+
+  /* ── RANK LIST ── */
+  .rank-list { display: flex; flex-direction: column; gap: 0; }
+  .rank-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .rank-row:last-child { border-bottom: none; }
+  .rank-num {
+    font-size: 13px; font-weight: 800; width: 22px;
+    text-align: center; flex-shrink: 0; color: var(--ink3);
+    font-family: 'DM Mono', monospace;
+  }
+  .rank-row:nth-child(1) .rank-num { color: #F5A623; }
+  .rank-row:nth-child(2) .rank-num { color: #9B9A95; }
+  .rank-row:nth-child(3) .rank-num { color: #C8864E; }
+  .rank-avatar {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0;
+  }
+  .rank-info { flex: 1; min-width: 0; }
+  .rank-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .rank-sub  { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+  .rank-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .rank-track { width: 64px; height: 5px; background: #F0F0F0; border-radius: 99px; overflow: hidden; }
+  .rank-fill  { height: 100%; border-radius: 99px; background: var(--orange); transition: width 1s cubic-bezier(.4,0,.2,1); }
+  .rank-score { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--ink2); width: 24px; text-align: right; }
+
+  /* ── REKAP TABLE ── */
+  .table-scroll-hint { font-size: 10px; color: var(--ink3); text-align: right; margin-bottom: 6px; }
+  .table-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .rekap-table { width: 100%; min-width: 500px; border-collapse: collapse; font-size: 12px; }
+  .rekap-table th {
+    text-align: left; padding: 7px 8px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--ink3);
+    border-bottom: 1.5px solid var(--border); background: #FAFAFA;
+  }
+  .rekap-table th:not(:first-child) { text-align: right; }
+  .rekap-table td {
+    padding: 10px 8px; border-bottom: 1px solid var(--border);
+    color: var(--ink); vertical-align: middle;
+  }
+  .rekap-table td:not(:first-child) { text-align: right; font-family: 'DM Mono', monospace; }
+  .rekap-table tr:last-child td { border-bottom: none; }
+  .rekap-table tr:hover td { background: var(--orange-lt); }
+  .emp-name-cell { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+  .emp-avatar {
+    width: 28px; height: 28px; border-radius: 9px;
+    font-size: 11px; font-weight: 700; color: #fff;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .net-pill {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+  }
+  .net-pos  { background: #EDFAF3; color: #1A9E6A; }
+  .net-neg  { background: #FEF0EC; color: var(--orange-dk); }
+  .net-zero { background: #F5F5F5; color: var(--ink3); }
+
+  /* ── LOADING / ERROR ── */
+  .loading { text-align: center; padding: 60px 20px; color: var(--ink3); }
+  .loading-spinner {
+    width: 34px; height: 34px; border: 3px solid #F0F0F0;
+    border-top-color: var(--orange); border-radius: 50%;
+    animation: spin .8s linear infinite; margin: 0 auto 14px;
+  }
+  .error-msg {
+    background: #FFF4F2; border: 1px solid #FDDDD7; border-radius: var(--radius);
+    padding: 16px; color: #B03A20; font-size: 13px; line-height: 1.5;
+  }
+
+  /* ── SLIDE MENU ── */
+  .menu-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.35); z-index: 100;
+  }
+  .menu-overlay.open { display: block; animation: fadeIn .2s both; }
+  .slide-menu {
+    position: fixed; top: 0; right: 0;
+    width: min(320px,88vw); height: 100%;
+    background: #fff; border-radius: 20px 0 0 20px;
+    display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+    z-index: 101; overflow: hidden;
+  }
+  .slide-menu.open { transform: translateX(0); }
+  .slide-menu-header {
+    padding: 24px 20px 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .slide-brand { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -.5px; }
+  .slide-brand span { color: var(--orange); }
+  .slide-sub { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+  .slide-close {
+    width: 36px; height: 36px; background: #F5F5F5; border: none; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; touch-action: manipulation;
+  }
+  .slide-close svg { width: 16px; height: 16px; stroke: var(--ink2); stroke-width: 2.2; fill: none; stroke-linecap: round; }
+  .slide-menu-body { flex: 1; }
+  .slide-menu-footer {
+    border-top: 1px solid var(--border);
+    padding: 8px 20px 28px;
+    display: flex; flex-direction: column;
+  }
+  .slide-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0; cursor: pointer;
+    border: none; background: none; width: 100%; text-align: left;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    border-bottom: 1px solid var(--border);
+  }
+  .slide-item-left { display: flex; align-items: center; gap: 12px; }
+  .slide-item-emoji { font-size: 18px; width: 24px; text-align: center; }
+  .slide-item-label { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .slide-item-arrow { font-size: 18px; color: var(--ink3); }
+  .toggle-wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0;
+  }
+  .toggle-left { display: flex; align-items: center; gap: 12px; }
+  .toggle-label { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .toggle {
+    width: 46px; height: 27px; background: #E0E0E0; border-radius: 99px;
+    position: relative; cursor: pointer; transition: background .2s;
+    flex-shrink: 0; border: none; touch-action: manipulation;
+  }
+  .toggle.on { background: var(--orange); }
+  .toggle::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 21px; height: 21px; background: #fff; border-radius: 50%;
+    transition: left .2s; box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  }
+  .toggle.on::after { left: 22px; }
+  .slide-version { font-size: 12px; color: var(--ink3); padding-top: 14px; margin-top: 4px; }
+
+  /* ── DESKTOP ── */
+  @media (min-width: 700px) {
+    .topbar { padding: 20px 32px 16px; }
+    .tab-nav { padding: 0 24px; }
+    .filter-bar { padding: 12px 32px; }
+    .main { padding: 28px 32px 80px; max-width: 1200px; }
+    .kpi-grid { grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+    .award-grid { grid-template-columns: repeat(2,1fr); }
+    .two-col { display: grid; grid-template-columns: 1fr 1.6fr; gap: 16px; margin-bottom: 24px; }
+    .two-col .panel { margin-bottom: 0; }
+    .table-scroll-hint { display: none; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes spin   { to { transform:rotate(360deg); } }
+
+  .kpi-card:nth-child(1){ animation-delay:.05s }
+  .kpi-card:nth-child(2){ animation-delay:.10s }
+  .kpi-card:nth-child(3){ animation-delay:.15s }
+  .kpi-card:nth-child(4){ animation-delay:.20s }
+</style>
 </head>
 <body>
-<div class="shell">
-  <div class="top-bar">
-    <div class="brand">
-      <div class="brand-icon"><i class="ti ti-report-analytics" aria-hidden="true"></i></div>
-      <span class="brand-name">Presensi<span>.</span></span>
-    </div>
-    <div class="filters">
-      <select id="selBulan">
-        <option value="1">Januari</option><option value="2">Februari</option>
-        <option value="3">Maret</option><option value="4">April</option>
-        <option value="5">Mei</option><option value="6">Juni</option>
-        <option value="7">Juli</option><option value="8">Agustus</option>
-        <option value="9">September</option><option value="10">Oktober</option>
-        <option value="11">November</option><option value="12">Desember</option>
-      </select>
-      <select id="selTahun"></select>
-    </div>
+
+<!-- STICKY HEADER -->
+<div class="sticky-header">
+  <div class="topbar">
+    <div class="brand">Kelola<span>.</span></div>
+    <button class="hamburger" onclick="openMenu()" aria-label="Buka menu">
+      <svg viewBox="0 0 20 20"><line x1="2" y1="5" x2="18" y2="5"/><line x1="2" y1="10" x2="18" y2="10"/><line x1="2" y1="15" x2="18" y2="15"/></svg>
+    </button>
   </div>
-  <div id="app"><div class="state-box"><div class="spinner"></div>Memuat data...</div></div>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('presensi',this)">📅 Presensi</button>
+    <button class="tab-btn" onclick="switchTab('penjahit',this)">✂️ Penjahit</button>
+    <button class="tab-btn" onclick="switchTab('keuangan',this)">💰 Keuangan</button>
+    <button class="tab-btn" onclick="switchTab('inventori',this)">📦 Inventori</button>
+    <button class="tab-btn" onclick="switchTab('produksi',this)">🏭 Produksi</button>
+  </div>
 </div>
+
+<!-- TAB: PRESENSI -->
+<div class="tab-page active" id="tab-presensi">
+  <div class="filter-bar">
+    <select id="sel-bulan">
+      <option value="1">Januari</option><option value="2">Februari</option>
+      <option value="3">Maret</option><option value="4">April</option>
+      <option value="5">Mei</option><option value="6">Juni</option>
+      <option value="7">Juli</option><option value="8">Agustus</option>
+      <option value="9">September</option><option value="10">Oktober</option>
+      <option value="11">November</option><option value="12">Desember</option>
+    </select>
+    <select id="sel-tahun"></select>
+    <button class="btn-filter" onclick="loadData()">Tampilkan</button>
+  </div>
+  <div class="main">
+    <div class="loading" id="loading-state">
+      <div class="loading-spinner"></div>
+      <div style="font-size:14px;">Memuat data...</div>
+    </div>
+    <div id="dashboard-content" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- TAB: PENJAHIT -->
+<div class="tab-page" id="tab-penjahit">
+  <div class="placeholder"><div class="placeholder-icon">✂️</div><div>Halaman Penjahit</div></div>
+</div>
+
+<!-- TAB: KEUANGAN -->
+<div class="tab-page" id="tab-keuangan">
+  <div class="placeholder"><div class="placeholder-icon">💰</div><div>Halaman Keuangan</div></div>
+</div>
+
+<!-- TAB: INVENTORI -->
+<div class="tab-page" id="tab-inventori">
+  <div class="placeholder"><div class="placeholder-icon">📦</div><div>Halaman Inventori</div></div>
+</div>
+
+<!-- TAB: PRODUKSI -->
+<div class="tab-page" id="tab-produksi">
+  <div class="placeholder"><div class="placeholder-icon">🏭</div><div>Halaman Produksi</div></div>
+</div>
+
+<!-- OVERLAY -->
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+
+<!-- SLIDE MENU -->
+<div class="slide-menu" id="slide-menu">
+  <div class="slide-menu-header">
+    <div>
+      <div class="slide-brand">Kelola<span>.</span></div>
+      <div class="slide-sub">Sistem manajemen bisnis</div>
+    </div>
+    <button class="slide-close" onclick="closeMenu()" aria-label="Tutup menu">
+      <svg viewBox="0 0 16 16"><line x1="2" y1="2" x2="14" y2="14"/><line x1="14" y1="2" x2="2" y2="14"/></svg>
+    </button>
+  </div>
+  <div class="slide-menu-body"></div>
+  <div class="slide-menu-footer">
+    <button class="slide-item" onclick="alert('Pengaturan')">
+      <div class="slide-item-left">
+        <span class="slide-item-emoji">⚙️</span>
+        <span class="slide-item-label">Pengaturan</span>
+      </div>
+      <span class="slide-item-arrow">›</span>
+    </button>
+    <div class="toggle-wrap">
+      <div class="toggle-left">
+        <span class="slide-item-emoji">🌙</span>
+        <span class="toggle-label">Mode gelap</span>
+      </div>
+      <button class="toggle" id="dark-toggle" onclick="toggleDark()" aria-label="Toggle mode gelap"></button>
+    </div>
+    <div class="slide-version">v1.0 · Kelola App</div>
+  </div>
+</div>
+
 <script>
+// ── GANTI URL INI ──
 const API_URL = "https://script.google.com/macros/s/AKfycbzdnuBcu7U9PEZI6gg_MoOS6kLhbLw72sB7pmJGF7mfLEgg5YAVbFwDksovoSvRryCp/exec";
-const avatarMap = {}; let avatarIdx = 0;
-function getAvatar(n) { if (avatarMap[n]===undefined) avatarMap[n]=avatarIdx++%6; return avatarMap[n]; }
-function initials(n) { return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
-const bulanNames=['','Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-const medals=['#f07040','#f5957a','#fab59f','#fcd4c6','#fde8e2','#fdf0ec'];
-function fmtRp(v){if(!v||v===0)return'Rp0';const a=Math.abs(v),s=a>=1000000?(a/1000000).toFixed(1).replace('.0','')+'jt':Math.round(a/1000)+'rb';return(v<0?'-':'+')+' Rp'+s;}
 
-function initFilters(){
-  const now=new Date(),selB=document.getElementById('selBulan'),selY=document.getElementById('selTahun');
-  selB.value=now.getMonth()+1;
-  for(let y=2024;y<=now.getFullYear()+1;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===now.getFullYear())o.selected=true;selY.appendChild(o);}
-  selB.addEventListener('change',loadData);selY.addEventListener('change',loadData);
+const BULAN_NAMES = ["","Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const AVATAR_COLORS = ["#E8603C","#2BC4B4","#5B8DEF","#F5A623","#9B59B6","#27AE60"];
+const RANK_FILL_COLORS = ["#E8603C","#F07A5A","#F5957A","#FAB59F","#FCD4C6","#FEE8E2"];
+
+const Q_BEST = [
+  n => `Konsistensi adalah kekuatan terbesar. ${n} hadir penuh dan selalu tepat waktu — teladan nyata bagi tim.`,
+  n => `${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`,
+];
+const Q_GROW = [
+  n => `Dengan sedikit motivasi, ${n} bisa melompat jauh bulan depan.`,
+  n => `${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`,
+];
+
+// ── NAV ──
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
 }
+function openMenu() {
+  document.getElementById('menu-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('slide-menu').classList.add('open'), 10);
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  document.getElementById('slide-menu').classList.remove('open');
+  document.getElementById('menu-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function toggleDark() { document.getElementById('dark-toggle').classList.toggle('on'); }
 
-async function loadData(){
-  const b=document.getElementById('selBulan').value,y=document.getElementById('selTahun').value;
-  document.getElementById('app').innerHTML='<div class="state-box"><div class="spinner"></div>Memuat data...</div>';
-  try{
-    const res=await fetch(`${API_URL}?action=dashboard&bulan=${b}&tahun=${y}`);
-    const data=await res.json();
-    if(data.error)throw new Error(data.error);
-    render(data,parseInt(b),parseInt(y));
-  }catch(err){
-    document.getElementById('app').innerHTML=`<div class="state-box"><i class="ti ti-wifi-off" style="font-size:28px;display:block;margin-bottom:10px;color:var(--orange);"></i>Gagal memuat data.<br><small style="color:var(--text3)">${err.message}</small></div>`;
+// ── INIT ──
+function fixHeaderOffset() {
+  const h = document.querySelector('.sticky-header').offsetHeight;
+  document.body.style.paddingTop = h + 'px';
+}
+window.addEventListener('resize', fixHeaderOffset);
+
+document.addEventListener('DOMContentLoaded', () => {
+  fixHeaderOffset();
+  // populate years
+  const selY = document.getElementById('sel-tahun');
+  const cur = new Date().getFullYear();
+  for (let y = cur; y >= cur - 3; y--) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y;
+    if (y === cur) o.selected = true;
+    selY.appendChild(o);
+  }
+  // set bulan default
+  document.getElementById('sel-bulan').value = new Date().getMonth() + 1;
+  loadData();
+});
+
+// ── FETCH ──
+async function loadData() {
+  showLoading(true);
+  const b = document.getElementById('sel-bulan').value;
+  const y = document.getElementById('sel-tahun').value;
+  try {
+    const res = await fetch(`${API_URL}?action=dashboard&bulan=${b}&tahun=${y}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    renderDashboard(data, parseInt(b), parseInt(y));
+  } catch (err) {
+    showError(err.message);
   }
 }
 
-function render(data,b,y){
-  const {summary,scores,rekap}=data;
-  const jams=rekap.filter(e=>e.rerataMasuk&&e.rerataMasuk!=='—').map(e=>{const[h,m]=e.rerataMasuk.split(':').map(Number);return h*60+m;});
-  const avgMin=jams.length?Math.round(jams.reduce((a,b)=>a+b,0)/jams.length):null;
-  const avgJam=avgMin!==null?String(Math.floor(avgMin/60)).padStart(2,'0')+':'+String(avgMin%60).padStart(2,'0'):'—';
-  document.getElementById('app').innerHTML=`
-    <p class="label">Ringkasan · ${bulanNames[b]} ${y}</p>
-    <div class="metric-grid">
-      <div class="metric"><div class="m-icon"><i class="ti ti-users" aria-hidden="true"></i></div><div class="m-label">Total karyawan</div><div class="m-val">${rekap.length}</div><div class="m-sub">aktif bulan ini</div></div>
-      <div class="metric c-amber"><div class="m-icon"><i class="ti ti-clock" aria-hidden="true"></i></div><div class="m-label">Rerata jam masuk</div><div class="m-val">${avgJam}</div><div class="m-sub">rata-rata semua</div></div>
-      <div class="metric c-red"><div class="m-icon"><i class="ti ti-alert-circle" aria-hidden="true"></i></div><div class="m-label">Total denda</div><div class="m-val">${fmtRp(summary.totalDenda)}</div><div class="m-sub">${summary.dendaCount} karyawan terdenda</div></div>
-      <div class="metric c-green"><div class="m-icon"><i class="ti ti-trending-up" aria-hidden="true"></i></div><div class="m-label">Total lembur</div><div class="m-val">${fmtRp(summary.totalLembur)}</div><div class="m-sub">${summary.lemburCount} karyawan</div></div>
+function showLoading(on) {
+  document.getElementById('loading-state').style.display = on ? 'block' : 'none';
+  document.getElementById('dashboard-content').style.display = on ? 'none' : 'block';
+}
+function showError(msg) {
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('dashboard-content').style.display = 'block';
+  document.getElementById('dashboard-content').innerHTML =
+    `<div class="error-msg">⚠️ Gagal memuat data: ${msg}<br>
+     <small style="margin-top:6px;display:block;">Pastikan Apps Script URL sudah benar dan sudah di-deploy sebagai Web App.</small></div>`;
+}
+
+// ── HELPERS ──
+function fmtRp(v) {
+  if (!v || v === 0) return 'Rp0';
+  const abs = Math.abs(v);
+  const str = abs >= 1000000 ? (abs/1000000).toFixed(1).replace('.0','')+'jt' : Math.round(abs/1000)+'rb';
+  return (v < 0 ? '-' : '+') + 'Rp' + str;
+}
+function initials(n) { return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+
+// ── RENDER ──
+function renderDashboard(data, b, y) {
+  const { summary, scores, rekap } = data;
+  const periodeLabel = `${BULAN_NAMES[b]} ${y}`;
+  const totalKaryawan = rekap.length;
+
+  // rerata jam masuk
+  const jams = rekap.filter(e => e.rerataMasuk && e.rerataMasuk !== '—')
+    .map(e => { const [h,m] = e.rerataMasuk.split(':').map(Number); return h*60+m; });
+  const avgMin = jams.length ? Math.round(jams.reduce((a,b)=>a+b,0)/jams.length) : null;
+  const avgJam = avgMin !== null
+    ? String(Math.floor(avgMin/60)).padStart(2,'0')+':'+String(avgMin%60).padStart(2,'0') : '—';
+
+  // spotlight
+  const best = scores[0];
+  const grow = scores[scores.length - 1];
+  const totalHari = Math.max(...rekap.map(r => r.hariKerja || r.hadir || 1));
+
+  const html = `
+    <!-- KPI -->
+    <div class="sec-title">Ringkasan · ${periodeLabel}</div>
+    <div class="kpi-grid">
+      <div class="kpi-card c-orange">
+        <span class="kpi-emoji">👥</span>
+        <div class="kpi-label">Total Karyawan</div>
+        <div class="kpi-value">${totalKaryawan}</div>
+        <div class="kpi-sub">aktif bulan ini</div>
+      </div>
+      <div class="kpi-card c-blue">
+        <span class="kpi-emoji">🕐</span>
+        <div class="kpi-label">Rerata Jam Masuk</div>
+        <div class="kpi-value">${avgJam}</div>
+        <div class="kpi-sub">rata-rata semua</div>
+      </div>
+      <div class="kpi-card c-yellow">
+        <span class="kpi-emoji">⚠️</span>
+        <div class="kpi-label">Total Denda</div>
+        <div class="kpi-value" style="font-size:clamp(16px,4vw,24px);">${fmtRp(summary.totalDenda)}</div>
+        <div class="kpi-sub">${summary.dendaCount} karyawan terdenda</div>
+      </div>
+      <div class="kpi-card c-teal">
+        <span class="kpi-emoji">📈</span>
+        <div class="kpi-label">Total Lembur</div>
+        <div class="kpi-value" style="font-size:clamp(16px,4vw,24px);">${fmtRp(summary.totalLembur)}</div>
+        <div class="kpi-sub">${summary.lemburCount} karyawan</div>
+      </div>
     </div>
-    <p class="label">Spotlight karyawan</p>
-    <div class="spotlight-grid" id="spotlight"></div>
-    <div class="card"><p class="label">Peringkat semua karyawan</p><div id="rank-list"></div></div>
-    <div class="card"><p class="label">Rekap karyawan</p><div class="tbl-wrap"><table>
-      <thead><tr><th>Karyawan</th><th style="text-align:center">Hadir</th><th style="text-align:center">Izin</th><th style="text-align:center">Sakit</th><th style="text-align:right">Lembur</th><th style="text-align:right">Denda</th><th style="text-align:right">Net</th></tr></thead>
-      <tbody id="tbl-body"></tbody>
-    </table></div></div>`;
-  renderSpotlight(scores,rekap);renderRank(scores);renderTable(rekap);
+
+    <!-- SPOTLIGHT -->
+    <div class="sec-title">Spotlight Karyawan</div>
+    <div class="award-grid">
+      ${best ? `
+      <div class="award-card best">
+        <div class="award-icon">🏆</div>
+        <div style="flex:1;min-width:0;">
+          <div class="award-tag">Bintang Bulan Ini</div>
+          <div class="award-name">${best.nama}</div>
+          <div class="award-detail">${Q_BEST[0](best.nama)}</div>
+          <div class="award-detail" style="margin-top:6px;opacity:.85;">
+            Skor ${best.skor} · ${(rekap.find(r=>r.nama===best.nama)||{}).hadir||0} / ${totalHari} hari · ${best.rerataMasuk||'—'}
+          </div>
+        </div>
+      </div>` : ''}
+      ${grow && grow.nama !== best?.nama ? `
+      <div class="award-card grow">
+        <div class="award-icon">🌱</div>
+        <div style="flex:1;min-width:0;">
+          <div class="award-tag">Ruang untuk Tumbuh</div>
+          <div class="award-name">${grow.nama}</div>
+          <div class="award-detail" style="color:var(--ink2);">${Q_GROW[0](grow.nama)}</div>
+          <div class="award-detail" style="margin-top:6px;">
+            Skor ${grow.skor} · ${(rekap.find(r=>r.nama===grow.nama)||{}).hadir||0} / ${totalHari} hari · ${grow.rerataMasuk||'—'}
+          </div>
+        </div>
+      </div>` : ''}
+    </div>
+
+    <!-- RANK + REKAP -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-title">🏅 Peringkat Karyawan</div>
+        <div class="rank-list">
+          ${scores.map((e, i) => `
+          <div class="rank-row">
+            <span class="rank-num">${i+1}</span>
+            <div class="rank-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">
+              ${initials(e.nama)}
+            </div>
+            <div class="rank-info">
+              <div class="rank-name">${e.nama}</div>
+              <div class="rank-sub">${e.rerataMasuk||'—'} avg masuk</div>
+            </div>
+            <div class="rank-right">
+              <div class="rank-track">
+                <div class="rank-fill" style="width:0%;background:${RANK_FILL_COLORS[Math.min(i,5)]}" data-w="${e.skor}%"></div>
+              </div>
+              <span class="rank-score">${e.skor}</span>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">📋 Rekap Karyawan</div>
+        <div class="table-scroll-hint">← geser untuk lihat semua →</div>
+        <div class="table-scroll-wrap">
+          <table class="rekap-table">
+            <thead>
+              <tr>
+                <th>Karyawan</th>
+                <th>Hadir</th>
+                <th>Izin</th>
+                <th>Sakit</th>
+                <th>Lembur</th>
+                <th>Denda</th>
+                <th>Net</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rekap.map((e, i) => {
+                const net = e.net || 0;
+                const pillCls = net > 0 ? 'net-pos' : net < 0 ? 'net-neg' : 'net-zero';
+                return `<tr>
+                  <td>
+                    <div class="emp-name-cell">
+                      <div class="emp-avatar" style="background:${AVATAR_COLORS[i%AVATAR_COLORS.length]}">
+                        ${initials(e.nama)}
+                      </div>
+                      ${e.nama}
+                    </div>
+                  </td>
+                  <td>${e.hadir}</td>
+                  <td>${e.izin}</td>
+                  <td>${e.sakit}</td>
+                  <td style="color:${(e.totalLembur||0)>0?'#1A9E6A':'var(--ink3)'};">${fmtRp(e.totalLembur||0)}</td>
+                  <td style="color:${(e.totalDenda||0)<0?'var(--orange-dk)':'var(--ink3)'};">${fmtRp(e.totalDenda||0)}</td>
+                  <td><span class="net-pill ${pillCls}">${fmtRp(net)}</span></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('dashboard-content').innerHTML = html;
+  showLoading(false);
+
+  // animate rank bars
+  setTimeout(() => {
+    document.querySelectorAll('.rank-fill[data-w]').forEach(el => {
+      el.style.width = el.dataset.w;
+    });
+  }, 80);
 }
-
-const qBest=[n=>`Konsistensi adalah kekuatan terbesar. ${n} hadir penuh dan selalu tepat waktu — teladan nyata bagi tim.`,n=>`${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`];
-const qGrow=[n=>`Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit penyesuaian, ${n} bisa melompat jauh bulan depan.`,n=>`${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`];
-
-function spCard(e,rekap,type,rank,totalHari){
-  const r=rekap.find(x=>x.nama===e.nama)||{},idx=getAvatar(e.nama);
-  const q=(type==='best'?qBest:qGrow)[rank%2](e.nama);
-  const tag=type==='best'?`<span class="sp-tag best"><i class="ti ti-star" aria-hidden="true" style="font-size:12px"></i>Bintang bulan ini</span>`:`<span class="sp-tag grow"><i class="ti ti-trending-up" aria-hidden="true" style="font-size:12px"></i>Ruang untuk tumbuh</span>`;
-  const bar=type==='best'?'var(--orange)':'var(--amber)';
-  return `<div class="sp-card ${type}">${tag}<div class="av-row"><div class="av av-${idx}">${initials(e.nama)}</div><div><div class="av-name">${e.nama}</div><div class="av-score">Skor ${e.skor} · Peringkat #${rank}</div></div></div><div class="quote ${type}">${q}</div><div class="sp-stats"><div class="sp-stat"><div class="s-label">Kehadiran</div><div class="s-val">${r.hadir||0} / ${totalHari} hari</div></div><div class="sp-stat"><div class="s-label">Rerata masuk</div><div class="s-val">${e.rerataMasuk||'—'}</div></div></div><div class="bar-wrap"><div class="bar-head"><span>Skor keseluruhan</span><span>${e.skor} / 100</span></div><div class="bar-track"><div class="bar-fill" style="width:${e.skor}%;background:${bar};"></div></div></div></div>`;
-}
-
-function renderSpotlight(scores,rekap){
-  if(!scores.length)return;
-  const totalHari=Math.max(...rekap.map(r=>r.hariKerja||r.hadir||1));
-  document.getElementById('spotlight').innerHTML=spCard(scores[0],rekap,'best',1,totalHari)+spCard(scores[scores.length-1],rekap,'grow',scores.length,totalHari);
-}
-
-function renderRank(scores){
-  const el=document.getElementById('rank-list');
-  if(!scores.length){el.innerHTML='<div class="state-box" style="padding:1rem;">Tidak ada data.</div>';return;}
-  el.innerHTML=scores.map((e,i)=>`<div class="rank-row"><span class="rank-num">${i+1}</span><div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div><span class="r-name">${e.nama}</span><div class="r-track"><div class="r-fill" style="width:${e.skor}%;background:${medals[Math.min(i,5)]};"></div></div><span class="r-score">${e.skor}</span></div>`).join('');
-}
-
-function renderTable(rekap){
-  const tbody=document.getElementById('tbl-body');
-  if(!rekap.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:24px;">Tidak ada data.</td></tr>';return;}
-  tbody.innerHTML=rekap.map(e=>{const net=e.net||0,bc=net>0?'pos':net<0?'neg':'zero';return`<tr><td><div class="td-emp"><div class="sm-av av-${getAvatar(e.nama)}">${initials(e.nama)}</div>${e.nama}</div></td><td style="text-align:center">${e.hadir}</td><td style="text-align:center">${e.izin}</td><td style="text-align:center">${e.sakit}</td><td style="text-align:right;color:${(e.totalLembur||0)>0?'var(--green)':'var(--text3)'};">${fmtRp(e.totalLembur||0)}</td><td style="text-align:right;color:${(e.totalDenda||0)<0?'var(--red)':'var(--text3)'};">${fmtRp(e.totalDenda||0)}</td><td style="text-align:right"><span class="badge ${bc}">${fmtRp(net)}</span></td></tr>`;}).join('');
-}
-
-initFilters();loadData();
 </script>
 </body>
 </html>

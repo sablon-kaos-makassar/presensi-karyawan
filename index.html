@@ -140,39 +140,48 @@
   .kpi-sub   { font-size: 11px; color: var(--ink3); margin-top: 5px; line-height: 1.4; }
 
   /* ── SPOTLIGHT / AWARD CARDS ── */
-  .award-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 24px; }
+  .award-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 24px; }
   .award-card {
-    border-radius: var(--radius); padding: 16px;
-    display: flex; align-items: center; gap: 14px;
+    border-radius: var(--radius); padding: 18px 16px;
     animation: fadeUp .5s both;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+    background: #fff;
   }
-  .award-card.best {
-    background: var(--orange);
-    box-shadow: 0 4px 16px rgba(232,96,60,.22);
-  }
-  .award-card.grow {
-    background: #FEF9EC;
-    box-shadow: 0 2px 10px rgba(0,0,0,.06);
-  }
-  .award-icon {
-    font-size: 26px; width: 50px; height: 50px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
-  }
-  .award-card.best .award-icon { background: rgba(255,255,255,.2); }
-  .award-card.grow .award-icon { background: rgba(245,166,35,.15); }
-  .award-tag  {
+
+  /* header: tag + nama + quote */
+  .award-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+  .award-icon { font-size: 26px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .award-tag {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1.5px; margin-bottom: 3px;
   }
-  .award-card.best .award-tag  { color: rgba(255,255,255,.7); }
-  .award-card.grow .award-tag  { color: #B07800; }
-  .award-name { font-size: 19px; font-weight: 800; line-height: 1.1; }
-  .award-card.best .award-name { color: #fff; }
-  .award-card.grow .award-name { color: var(--ink); }
-  .award-detail { font-size: 12px; margin-top: 3px; }
-  .award-card.best .award-detail { color: rgba(255,255,255,.65); }
-  .award-card.grow .award-detail { color: var(--ink3); }
+  .award-card.best .award-tag { color: var(--orange); }
+  .award-card.grow .award-tag { color: #B07800; }
+  .award-name { font-size: 18px; font-weight: 800; color: var(--ink); line-height: 1.1; margin-bottom: 4px; }
+  .award-quote { font-size: 12px; color: var(--ink3); line-height: 1.55; font-style: italic; }
+
+  /* widget stats row */
+  .award-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .award-stat {
+    background: #F5F5F5; border-radius: 10px; padding: 10px 12px;
+  }
+  .award-stat-label { font-size: 11px; color: var(--ink3); font-weight: 500; margin-bottom: 3px; }
+  .award-stat-val   { font-size: 15px; font-weight: 700; color: var(--ink); }
+
+  /* score bar */
+  .award-score-wrap { }
+  .award-score-head {
+    display: flex; justify-content: space-between;
+    font-size: 12px; font-weight: 600; color: var(--ink2); margin-bottom: 6px;
+  }
+  .award-score-track {
+    height: 8px; background: #F0F0F0; border-radius: 99px; overflow: hidden;
+  }
+  .award-score-fill {
+    height: 100%; border-radius: 99px; background: var(--orange);
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .award-card.grow .award-score-fill { background: #F5A623; }
 
   /* ── PANEL ── */
   .panel {
@@ -457,7 +466,7 @@ const Q_BEST = [
   n => `${n} membuktikan bahwa dedikasi berbicara lebih keras dari kata-kata. Terus pertahankan!`,
 ];
 const Q_GROW = [
-  n => `Dengan sedikit motivasi, ${n} bisa melompat jauh bulan depan.`,
+  n => `Setiap hari baru adalah kesempatan untuk tampil lebih baik. Dengan sedikit penyesuaian, ${n} bisa melompat jauh bulan depan.`,
   n => `${n} punya potensi besar — satu langkah kecil untuk mengubah kebiasaan menjadi prestasi.`,
 ];
 
@@ -591,30 +600,70 @@ function renderDashboard(data, b, y) {
     <!-- SPOTLIGHT -->
     <div class="sec-title">Spotlight Karyawan</div>
     <div class="award-grid">
-      ${best ? `
-      <div class="award-card best">
-        <div class="award-icon">🏆</div>
-        <div style="flex:1;min-width:0;">
-          <div class="award-tag">Bintang Bulan Ini</div>
-          <div class="award-name">${best.nama}</div>
-          <div class="award-detail">${Q_BEST[0](best.nama)}</div>
-          <div class="award-detail" style="margin-top:6px;opacity:.85;">
-            Skor ${best.skor} · ${(rekap.find(r=>r.nama===best.nama)||{}).hadir||0} / ${totalHari} hari · ${best.rerataMasuk||'—'}
+      ${best ? (() => {
+        const rBest = rekap.find(r => r.nama === best.nama) || {};
+        return `
+        <div class="award-card best">
+          <div class="award-head">
+            <div class="award-icon">🏆</div>
+            <div>
+              <div class="award-tag">Bintang Bulan Ini</div>
+              <div class="award-name">${best.nama}</div>
+              <div class="award-quote">${Q_BEST[0](best.nama)}</div>
+            </div>
           </div>
-        </div>
-      </div>` : ''}
-      ${grow && grow.nama !== best?.nama ? `
-      <div class="award-card grow">
-        <div class="award-icon">🌱</div>
-        <div style="flex:1;min-width:0;">
-          <div class="award-tag">Ruang untuk Tumbuh</div>
-          <div class="award-name">${grow.nama}</div>
-          <div class="award-detail" style="color:var(--ink2);">${Q_GROW[0](grow.nama)}</div>
-          <div class="award-detail" style="margin-top:6px;">
-            Skor ${grow.skor} · ${(rekap.find(r=>r.nama===grow.nama)||{}).hadir||0} / ${totalHari} hari · ${grow.rerataMasuk||'—'}
+          <div class="award-stats">
+            <div class="award-stat">
+              <div class="award-stat-label">Kehadiran</div>
+              <div class="award-stat-val">${rBest.hadir||0} / ${totalHari} hari</div>
+            </div>
+            <div class="award-stat">
+              <div class="award-stat-label">Rerata masuk</div>
+              <div class="award-stat-val">${best.rerataMasuk||'—'}</div>
+            </div>
           </div>
-        </div>
-      </div>` : ''}
+          <div class="award-score-wrap">
+            <div class="award-score-head">
+              <span>Skor keseluruhan</span><span>${best.skor} / 100</span>
+            </div>
+            <div class="award-score-track">
+              <div class="award-score-fill" style="width:0%" data-w="${best.skor}%"></div>
+            </div>
+          </div>
+        </div>`;
+      })() : ''}
+      ${grow && grow.nama !== best?.nama ? (() => {
+        const rGrow = rekap.find(r => r.nama === grow.nama) || {};
+        return `
+        <div class="award-card grow">
+          <div class="award-head">
+            <div class="award-icon">🌱</div>
+            <div>
+              <div class="award-tag">Ruang untuk Tumbuh</div>
+              <div class="award-name">${grow.nama}</div>
+              <div class="award-quote">${Q_GROW[0](grow.nama)}</div>
+            </div>
+          </div>
+          <div class="award-stats">
+            <div class="award-stat">
+              <div class="award-stat-label">Kehadiran</div>
+              <div class="award-stat-val">${rGrow.hadir||0} / ${totalHari} hari</div>
+            </div>
+            <div class="award-stat">
+              <div class="award-stat-label">Rerata masuk</div>
+              <div class="award-stat-val">${grow.rerataMasuk||'—'}</div>
+            </div>
+          </div>
+          <div class="award-score-wrap">
+            <div class="award-score-head">
+              <span>Skor keseluruhan</span><span>${grow.skor} / 100</span>
+            </div>
+            <div class="award-score-track">
+              <div class="award-score-fill" style="width:0%" data-w="${grow.skor}%"></div>
+            </div>
+          </div>
+        </div>`;
+      })() : ''}
     </div>
 
     <!-- RANK + REKAP -->
@@ -689,9 +738,9 @@ function renderDashboard(data, b, y) {
   document.getElementById('dashboard-content').innerHTML = html;
   showLoading(false);
 
-  // animate rank bars
+  // animate rank bars + spotlight score bars
   setTimeout(() => {
-    document.querySelectorAll('.rank-fill[data-w]').forEach(el => {
+    document.querySelectorAll('.rank-fill[data-w], .award-score-fill[data-w]').forEach(el => {
       el.style.width = el.dataset.w;
     });
   }, 80);

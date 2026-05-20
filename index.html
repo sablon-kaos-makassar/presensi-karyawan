@@ -390,15 +390,16 @@
 <div class="sticky-header">
   <div class="topbar">
     <div class="brand">Monito<span>.</span></div>
-    <button class="hamburger" onclick="openMenu()" aria-label="Buka menu">
+    < class="hamburger" onclick="openMenu()" aria-label="Buka menu">
       <svg viewBox="0 0 20 20"><line x1="2" y1="5" x2="18" y2="5"/><line x1="2" y1="10" x2="18" y2="10"/><line x1="2" y1="15" x2="18" y2="15"/></svg>
-    </button>
+    </>
   </div>
   <div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('presensi',this)">📅 Presensi</button>
+    < class="tab-btn active" onclick="switchTab('presensi',this)">📅 Presensi</button>
     <button class="tab-btn" onclick="switchTab('penjahit',this)">✂️ Penjahit</button>
     <button class="tab-btn" onclick="switchTab('stok',this)">📦 Stok Barang</button>
     <button class="tab-btn" onclick="switchTab('orderan',this)">🏭 Orderan</button>
+    <button class="tab-btn" onclick="switchTab('produksi',this)">🏗️ Produksi</button>
     <button class="tab-btn" onclick="switchTab('keuangan',this)">💰 Keuangan</button>
     <button class="tab-btn" onclick="switchTab('alat-bahan')">🧰 Alat & Bahan</button>
     
@@ -512,6 +513,7 @@ function switchTab(id, btn) {
     'keuangan' : 'https://sablon-kaos-makassar.github.io/laporan-keuangan/',
     'stok': 'https://sablon-kaos-makassar.github.io/stok-barang',
     'orderan' : 'https://sablon-kaos-makassar.github.io/orderan',
+    'produksi'   : 'https://sablon-kaos-makassar.github.io/produksi/',
     'alat-bahan' : 'https://sablon-kaos-makassar.github.io/alat-bahan',
   };
   if (links[id]) {
